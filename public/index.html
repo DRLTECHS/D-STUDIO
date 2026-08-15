@@ -8,12 +8,12 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/animations.css">
     <style>
       :root { --ink:#121417; --paper:#f4f4f1; --muted:#888c93; --line:#2c3036; --accent:#e8c547; --panel:#191c20; }
       * { box-sizing:border-box; }
       html { scroll-behavior:smooth; }
       body { background:var(--ink); color:var(--paper); font-family:Manrope,Arial,sans-serif; margin:0; }
-      /* subtle paper grid */
       body::before { background-image:linear-gradient(#ffffff06 1px,transparent 1px),linear-gradient(90deg,#ffffff06 1px,transparent 1px); background-size:48px 48px; content:""; inset:0; pointer-events:none; position:fixed; z-index:0; opacity:.08; }
       a { color:inherit; }
       button,input { font:inherit; }
@@ -23,84 +23,34 @@
       .eyebrow::after { background:var(--line); content:""; height:1px; width:130px; }
       .dot { background:var(--accent); border-radius:99px; box-shadow:0 0 12px #e8c547aa; display:inline-block; height:8px; width:8px; }
       .button { align-items:center; background:var(--accent); border:1px solid var(--accent); color:#121417; cursor:pointer; display:inline-flex; font:700 11px "Space Mono",monospace; gap:10px; justify-content:center; padding:10px 14px; border-radius:6px; }
-      .button:hover { background:#f7d95b; }
       .button--ghost { background:transparent; border-color:#3b4047; color:var(--paper); }
-      .button--ghost:hover { background:#22262b; }
       header { align-items:center; display:flex; height:76px; justify-content:space-between; }
       .brand { align-items:center; display:flex; gap:12px; text-decoration:none; }
-      .brand-mark { align-items:center; border:1px solid #5f5225; color:var(--accent); display:grid; font-size:15px; height:24px; place-items:center; transform:rotate(45deg); width:24px; transition:transform .45s cubic-bezier(.2,.9,.2,1), box-shadow .35s; }
-      .brand-mark span { transform:rotate(-45deg); }
-      .brand-mark img { display:block; width:20px; height:20px; object-fit:contain; transform:rotate(-45deg); transition:transform .45s cubic-bezier(.2,.9,.2,1); }
-      .brand:hover .brand-mark { transform:rotate(45deg) scale(1.06); box-shadow:0 6px 24px rgba(232,197,71,.12); }
+      .brand-mark { align-items:center; border:1px solid #5f5225; color:var(--accent); display:grid; font-size:15px; height:24px; place-items:center; transform:rotate(45deg); width:24px; }
+      .brand-mark img { display:block; width:20px; height:20px; object-fit:contain; transform:rotate(-45deg); }
       .brand-name { font:800 20px "Space Mono",monospace; letter-spacing:.14em; }
-      .studio { border-left:1px solid var(--line); color:#70757c; font:11px "Space Mono",monospace; letter-spacing:.06em; padding-left:12px; }
-      .brand-copy { align-items:center; display:flex; gap:14px; }
       nav { display:flex; gap:32px; }
-      nav a { color:#a8adb4; font:11px "Space Mono",monospace; letter-spacing:.08em; text-decoration:none; text-transform:uppercase; transition:color .18s; }
+      nav a { color:#a8adb4; font:11px "Space Mono",monospace; letter-spacing:.08em; text-decoration:none; text-transform:uppercase; }
       nav a:hover { color:var(--accent); transform:translateY(-1px); }
       .hero { padding:57px 0 92px; }
       h1 { font-size:clamp(60px,8vw,106px); font-weight:800; letter-spacing:-.075em; line-height:.92; margin:36px 0 40px; max-width:920px; }
-      h1 span { display:block; }
-      .gold { color:var(--accent); text-shadow:0 0 18px #e8c5474d; }
-      .fade { color:#5b5f65; }
-      .hero-bottom { align-items:flex-start; display:flex; gap:50px; }
       .intro { color:#858a92; font:13px/1.75 "Space Mono",monospace; margin:0; max-width:430px; }
       .actions { display:flex; gap:12px; padding-top:1px; }
-
-      /* Reveal - improved animation */
-      .reveal { height:490px; margin-top:54px; overflow:hidden; position:relative; perspective:1000px; border-radius:8px; box-shadow:0 10px 40px rgba(0,0,0,.45); }
-      .reveal img { height:100%; object-fit:cover; position:absolute; width:100%; left:0; top:0; will-change:transform,filter; transition:transform .9s cubic-bezier(.2,.9,.2,1), filter .8s; }
-      .reveal .after { /* initial clip set by JS for smooth animation */ }
-      .reveal-divider { background:var(--accent); height:100%; left:50%; position:absolute; top:0; width:3px; z-index:6; transform:translateX(-50%); box-shadow:0 0 24px rgba(232,197,71,.15); transition:left .25s linear, transform .25s linear; }
-      .reveal-label { background:linear-gradient(180deg, #121417dd, #121417cc); color:var(--accent); font:10px "Space Mono",monospace; letter-spacing:.1em; padding:10px 12px; position:absolute; text-transform:uppercase; z-index:8; border-radius:6px; }
+      .reveal { height:490px; margin-top:54px; overflow:hidden; position:relative; }
+      .reveal img { height:100%; object-fit:cover; position:absolute; width:100%; left:0; top:0; }
+      .reveal .after { clip-path:inset(0 0 0 50%); }
+      .reveal-divider { background:var(--accent); height:100%; left:50%; position:absolute; top:0; width:3px; z-index:6; transform:translateX(-50%); }
+      .reveal-label { background:linear-gradient(180deg, #121417dd, #121417cc); color:var(--accent); font:10px "Space Mono",monospace; letter-spacing:.1em; padding:10px 12px; position:absolute; text-transform:uppercase; z-index:8; }
       .label-before { left:16px; top:16px; } .label-after { right:16px; top:16px; }
       .range { appearance:none; background:transparent; cursor:ew-resize; height:100%; left:0; margin:0; position:absolute; top:0; width:100%; z-index:9; }
       .range::-webkit-slider-thumb { appearance:none; height:100%; width:16px; background:transparent; }
-      .range::-moz-range-thumb { background:transparent; border:0; height:100%; width:16px; }
-
-      /* Project cards - entrance animation */
-      .project-grid { display:grid; gap:16px; grid-template-columns:repeat(12,1fr); }
-      .project { background:var(--panel); border:1px solid var(--line); cursor:pointer; grid-column:span 4; overflow:hidden; position:relative; transform:translateY(18px) scale(.995); opacity:0; transition:transform .9s cubic-bezier(.18,.9,.32,1), opacity .9s; }
-      .project.featured { grid-column:span 8; }
-      .project.in-view { transform:none; opacity:1; }
-      .project:hover { box-shadow:0 10px 40px rgba(232,197,71,.12); transform:translateY(-6px) scale(1.01); }
-      .project-img { display:block; height:260px; object-fit:cover; opacity:.9; transition:transform .9s cubic-bezier(.2,.9,.2,1), filter .6s; width:100%; transform-origin:center center; } .featured .project-img { height:360px; }
-      .project:hover .project-img { transform:scale(1.04) translateY(-4px) rotate(-.2deg); filter:brightness(1.03) saturate(1.05); }
-
-      /* subtle floating for hero visuals */
-      @keyframes floaty { 0%{ transform:translateY(0) } 50%{ transform:translateY(-6px) } 100%{ transform:translateY(0) } }
-      .reveal img { animation:floaty 8s ease-in-out infinite; }
-
-      /* stats counter */
       .stats { border-bottom:1px solid var(--line); border-top:1px solid var(--line); display:grid; grid-template-columns:repeat(4,1fr); }
       .stat { border-right:1px solid var(--line); padding:30px 22px; } .stat:last-child { border:0; }
-      .stat strong { display:block; font-size:36px; letter-spacing:-.06em; transform:translateY(6px); opacity:0; transition:transform .7s cubic-bezier(.2,.9,.2,1), opacity .7s; }
-      .stat.in-view strong { transform:none; opacity:1; }
-      .stat-number { font-feature-settings: "tnum" 1; }
-
-      /* cards and badge */
-      .tag { background:var(--accent); color:var(--ink); font:700 9px "Space Mono",monospace; left:14px; letter-spacing:.06em; padding:7px 9px; position:absolute; text-transform:uppercase; top:14px; border-radius:6px; }
-      .award-badge { align-items:center; background:#e8c547; color:var(--ink); display:flex; font:700 9px "Space Mono",monospace; gap:6px; left:14px; letter-spacing:.06em; padding:7px 9px; position:absolute; text-transform:uppercase; top:14px; border-radius:6px; }
-      .award-badge::before { content:"⭐"; font-size:10px; }
-      .project-body { min-height:145px; padding:20px; } .project-body h3 { font-size:25px; letter-spacing:-.05em; margin:0 0 9px; } .project-body p { color:#969ba2; font-size:13px; line-height:1.5; }
-
-      /* reduced motion */
-      @media (prefers-reduced-motion: reduce) {
-        .reveal img, .project, .stat strong { animation:none !important; transition:none !important; }
-      }
-
-      .quotes { background:#171a1e; border-bottom:1px solid var(--line); border-top:1px solid var(--line); }
-      .quote-grid { display:grid; gap:1px; grid-template-columns:repeat(3,1fr); }
-      .quote { background:var(--ink); min-height:325px; padding:38px 32px; } .quote-mark { color:var(--accent); font-size:42px; line-height:.7; } blockquote { font-size:20px; letter-spacing:-.035em; }
-      .archive { display:grid; gap:12px; grid-template-columns:repeat(4,1fr); } .archive-card { border:1px solid var(--line); min-height:190px; overflow:hidden; padding:18px; position:relative; }
-      .kit { background:var(--accent); color:var(--ink); } .kit .eyebrow { color:#574b1d; } .kit .eyebrow::after { background:#a48e32; } .kit h2 { max-width:670px; } .kit-copy { font:14px/1.7 "Space Mono",monospace; }
-      .progress-bar { background:#d4a520; height:4px; overflow:hidden; }
-      .progress-bar-fill { background:#121417; height:100%; transition:width .3s; }
-      .email-form { display:flex; max-width:620px; } .email-form input { background:#f6de74; border:1px solid #8e7b2d; color:var(--ink); flex:1; min-width:0; padding:0 16px; } .email-form .button { margin-left:8px; }
-      .process-grid { align-items:start; display:grid; gap:80px; grid-template-columns:1fr 1fr; } .process-copy { color:#9ba0a7; font-size:16px; line-height:1.65; max-width:500px; }
-      .metrics { background:linear-gradient(135deg, rgba(232,197,71,.05) 0%, transparent 100%); border:1px solid var(--line); padding:56px 42px; margin:42px 0; position:relative; overflow:hidden; }
+      .project-grid { display:grid; gap:16px; grid-template-columns:repeat(12,1fr); }
+      .project { background:var(--panel); border:1px solid var(--line); cursor:pointer; grid-column:span 4; overflow:hidden; position:relative; }
+      .project-img { display:block; height:260px; object-fit:cover; width:100%; }
       footer { border-top:1px solid var(--line); padding:32px 0; } .footer-row { align-items:center; color:#7f848b; display:flex; font:10px "Space Mono",monospace; justify-content:space-between; }
-      @media (max-width:1000px) { .project { grid-column:span 6; } .project.featured { grid-column:span 12; } .quote-grid { grid-template-columns:1fr; } .archive { grid-template-columns:repeat(2,1fr); } }
+      @media (max-width:1000px) { .project { grid-column:span 6; } .project.featured { grid-column:span 12; } }
       @media (max-width:800px) { .frame { padding:0 20px; } header { height:70px; } nav,.studio,.header-cta { display:none; } .hero { padding:55px 0 65px; } h1 { font-size:clamp(48px,15vw,75px); }
         .project { grid-column:span 12; } .project-img { height:220px; }
       }
@@ -109,7 +59,7 @@
   <body>
     <div class="frame">
       <header>
-        <a class="brand" href="#top" aria-label="DRL Techs home"><span class="brand-mark"><img src="/unnamed.webp" alt="DRL TECHS logo" width="24" height="24" loading="lazy"></span><span class="brand-copy"><strong class="brand-name">DRL TECHS</strong></span></a>
+        <a class="brand" href="#top" aria-label="DRL Techs home"><span class="brand-mark"><picture><source type="image/webp" srcset="/unnamed.webp"><img src="/unnamed.webp" alt="DRL TECHS logo" width="24" height="24" loading="lazy" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%2224%22%20height=%2224%22%3E%3Crect%20fill=%22%23e8c547%22%20width=%2224%22%20height=%2224%22/%3E%3Ctext%20x=%2212%22%20y=%2216%22%20font-size=%2210%22%20text-anchor=%22middle%22%20fill=%22%23121417%22%20font-family=%22Arial%22%3EDRL%3C/text%3E%3C/svg%3E'"/></picture></span><span class="brand-copy"><strong class="brand-name">DRL TECHS</strong></span></a>
         <nav aria-label="Main navigation"><a href="#work">Work</a><a href="products.html">Products</a><a href="contact.html">Contact</a><a href="order-tracking.html">Orders</a></nav>
         <a class="button header-cta" href="#dev-kit">↓ Dev Kit</a>
       </header>
@@ -121,7 +71,10 @@
           <div class="hero-bottom"><p class="intro">// Professional software trading and development services. Delivering enterprise solutions with excellence and reliability.</p><div class="actions"><a class="button" href="#work">View Work</a><a class="button button--ghost" href="#dev-kit">Get Dev Kit</a></div></div>
 
           <div class="reveal" aria-label="Game development before and after comparison">
-            <img class="before" src="https://img.rocket.new/generatedImages/rocket_gen_img_145467f23-1772147608952.png" alt="Before" aria-hidden="false">
+            <picture>
+              <source type="image/webp" srcset="https://img.rocket.new/generatedImages/rocket_gen_img_145467f23-1772147608952.png">
+              <img class="before" src="https://img.rocket.new/generatedImages/rocket_gen_img_145467f23-1772147608952.png" alt="Before" aria-hidden="false" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%201200%20490%22%3E%3Crect%20width=%22100%25%22%20height=%22100%25%22%20fill=%22%23121417%22/%3E%3Ctext%20x=%2260%25%22%20y=%2250%25%22%20fill=%22%23e8c547%22%20font-size=%2232%22%20font-family=%22Arial%22%20text-anchor=%22middle%22%3EImage%20Unavailable%3C/text%3E%3C/svg%3E'"/>
+            </picture>
             <img class="after" src="https://img.rocket.new/generatedImages/rocket_gen_img_171eb3e22-1772147609983.png" alt="After" aria-hidden="true">
             <div class="reveal-divider" aria-hidden="true"></div>
             <div class="reveal-label label-before">Before</div>
@@ -159,126 +112,9 @@
         <section id="process"><div class="process-grid"><div><p class="eyebrow">// the_process</p><h2>The workshop is always open.</h2><p class="process-copy">Every design decision is documented.</p></div></div></section>
       </main>
 
-      <footer><div class="footer-row"><div><a class="brand" href="#top"><span class="brand-mark"><img src="/unnamed.webp" alt="DRL TECHS logo" width="24" height="24" loading="lazy"></span><strong class="brand-name" style="font-size:14px;">DRL TECHS</strong></a><p style="margin:6px 0 0;color:#8c9196;font-size:12px">© DRL Techs</p></div><div style="color:#7f848b">Built with care</div></div></footer>
+      <footer><div class="footer-row"><div><a class="brand" href="#top"><span class="brand-mark"><picture><source type="image/webp" srcset="/unnamed.webp"><img src="/unnamed.webp" alt="DRL TECHS logo" width="24" height="24" loading="lazy" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%2224%22%20height=%2224%22%3E%3Crect%20fill=%22%23e8c547%22%20width=%2224%22%20height=%2224%22/%3E%3Ctext%20x=%2212%22%20y=%2216%22%20font-size=%2210%22%20text-anchor=%22middle%22%20fill=%22%23121417%22%20font-family=%22Arial%22%3EDRL%3C/text%3E%3C/svg%3E'"/></picture></span><strong class="brand-name" style="font-size:14px;">DRL TECHS</strong></a><p style="margin:6px 0 0;color:#8c9196;font-size:12px">© DRL Techs</p></div><div style="color:#7f848b">Built with care</div></div></footer>
     </div>
 
-    <script>
-      // Respect reduced motion preference
-      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-      // Utility: animate numeric counter
-      function animateCounter(el, endValue, duration=900) {
-        if (reduce) { el.textContent = endValue.toLocaleString(); return; }
-        const start = 0; const startTime = performance.now();
-        function step(now) {
-          const t = Math.min(1, (now - startTime)/duration);
-          // easeOutCubic
-          const eased = 1 - Math.pow(1 - t, 3);
-          const current = Math.floor(start + (endValue - start) * eased);
-          el.textContent = current.toLocaleString();
-          if (t < 1) requestAnimationFrame(step);
-        }
-        requestAnimationFrame(step);
-      }
-
-      document.addEventListener('DOMContentLoaded', () => {
-        // logo entrance
-        const brandMark = document.querySelector('.brand-mark');
-        if (!reduce && brandMark) {
-          brandMark.style.transform = 'rotate(45deg) scale(.6)';
-          brandMark.style.opacity = '0';
-          brandMark.style.transition = 'transform .9s cubic-bezier(.2,.9,.2,1), opacity .9s';
-          requestAnimationFrame(()=>{
-            brandMark.style.transform = 'rotate(45deg) scale(1)';
-            brandMark.style.opacity = '1';
-          });
-        }
-
-        // projects reveal on scroll
-        const projects = document.querySelectorAll('.project');
-        const stats = document.querySelectorAll('.stat');
-        const observerOpts = { root:null, rootMargin:'0px 0px -8%', threshold:0.12 };
-        const projObserver = new IntersectionObserver((entries, obs) => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting) { entry.target.classList.add('in-view'); obs.unobserve(entry.target); }
-          });
-        }, observerOpts);
-        projects.forEach(p => projObserver.observe(p));
-
-        // stats observer
-        const statsObserver = new IntersectionObserver((entries, obs) => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting) {
-              entry.target.classList.add('in-view');
-              const numEl = entry.target.querySelector('.stat-number');
-              const target = parseInt(entry.target.dataset.target || numEl.textContent.replace(/,/g,''), 10) || 0;
-              animateCounter(numEl, target, 1200);
-              obs.unobserve(entry.target);
-            }
-          });
-        }, { root:null, rootMargin:'0px', threshold:0.25 });
-        stats.forEach(s => statsObserver.observe(s));
-
-        // smooth reveal slider using requestAnimationFrame
-        const range = document.querySelector('.range');
-        const after = document.querySelector('.reveal .after');
-        const before = document.querySelector('.reveal .before');
-        const divider = document.querySelector('.reveal-divider');
-        if (range && after && divider) {
-          let current = parseFloat(range.value);
-          let target = current;
-          // apply initial clip
-          after.style.clipPath = `inset(0 0 0 ${100 - current}%)`;
-          divider.style.left = `${current}%`;
-
-          range.addEventListener('input', (e) => { target = parseFloat(e.target.value); });
-          function raf() {
-            if (Math.abs(target - current) > 0.1) {
-              current += (target - current) * 0.18; // smoothing
-              after.style.clipPath = `inset(0 0 0 ${100 - current}%)`;
-              divider.style.left = `${current}%`;
-              // parallax subtle
-              const pct = (current - 50)/50;
-              before.style.transform = `translateX(${pct * 6}px) scale(${1 + Math.abs(pct) * 0.01})`;
-              after.style.transform = `translateX(${pct * -6}px) scale(${1 + Math.abs(pct) * 0.01})`;
-            }
-            requestAnimationFrame(raf);
-          }
-          if (!reduce) requestAnimationFrame(raf);
-
-          // make range easier to grab on touch by expanding hit area
-          range.addEventListener('pointerdown', (ev) => { range.setPointerCapture(ev.pointerId); });
-        }
-
-        // subtle parallax on mousemove for hero (desktop)
-        const revealEl = document.querySelector('.reveal');
-        if (revealEl && !reduce) {
-          revealEl.addEventListener('mousemove', (e) => {
-            const r = revealEl.getBoundingClientRect();
-            const cx = (e.clientX - r.left) / r.width - 0.5;
-            const cy = (e.clientY - r.top) / r.height - 0.5;
-            const imgs = revealEl.querySelectorAll('img');
-            imgs.forEach((img, i) => {
-              const depth = (i === 0) ? 6 : -6;
-              img.style.transform = `translate(${cx * depth}px, ${cy * depth * 0.5}px) scale(1.01)`;
-            });
-          });
-          revealEl.addEventListener('mouseleave', () => {
-            revealEl.querySelectorAll('img').forEach(img => img.style.transform = 'translate(0,0) scale(1)');
-          });
-        }
-
-        // accessible: keyboard control for range
-        if (range) {
-          range.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') range.value = Math.max(0, range.value - 2);
-            if (e.key === 'ArrowRight' || e.key === 'ArrowUp') range.value = Math.min(100, +range.value + 2);
-            range.dispatchEvent(new Event('input'));
-          });
-        }
-
-      }); // DOMContentLoaded
-
-    </script>
+    <script src="/assets/js/animations.js" defer></script>
   </body>
 </html>
