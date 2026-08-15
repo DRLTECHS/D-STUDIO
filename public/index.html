@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="D-Studio development workspace">
+    <title>D-Studio</title>
+    <style>
+      * { box-sizing: border-box; }
+      body { margin: 0; }
+      .status-dot { animation: pulse 2s ease-in-out infinite; }
+      .workspace-link:hover { background: #d7ff55 !important; }
+      .workspace-link:focus-visible { outline: 3px solid #f7f7f2; outline-offset: 4px; }
+      @keyframes pulse { 50% { opacity: 0.45; } }
+      @media (max-width: 640px) {
+        .shell { padding: 20px !important; }
+        .header { align-items: flex-start !important; flex-direction: column !important; }
+        .hero { padding-top: 72px !important; }
+        .title { font-size: clamp(52px, 18vw, 76px) !important; }
+        .footer { align-items: flex-start !important; flex-direction: column !important; }
+      }
+    </style>
+  </head>
+  <body style="background:#11130f;color:#f7f7f2;font-family:Arial,Helvetica,sans-serif;min-height:100vh;">
+    <main class="shell" style="display:flex;flex-direction:column;justify-content:space-between;min-height:100vh;padding:32px 40px;">
+      <header class="header" style="align-items:center;border-bottom:1px solid #34382f;display:flex;justify-content:space-between;padding-bottom:20px;gap:16px;">
+        <div style="align-items:center;display:flex;gap:12px;">
+          <span style="background:#c8f135;display:block;height:14px;width:14px;"></span>
+          <strong style="font-size:14px;letter-spacing:.16em;text-transform:uppercase;">D-Studio</strong>
+        </div>
+        <div style="align-items:center;color:#b8bcae;display:flex;font-family:monospace;font-size:12px;gap:9px;text-transform:uppercase;">
+          <span class="status-dot" style="background:#c8f135;border-radius:50%;display:block;height:7px;width:7px;"></span>
+          Alloy environment online
+        </div>
+      </header>
+
+      <section class="hero" style="max-width:980px;padding:100px 0 80px;">
+        <p style="color:#c8f135;font-family:monospace;font-size:13px;letter-spacing:.12em;margin:0 0 24px;text-transform:uppercase;">Development workspace / 001</p>
+        <h1 class="title" style="font-size:clamp(64px,11vw,148px);font-weight:700;letter-spacing:-.075em;line-height:.82;margin:0;max-width:900px;">Build what matters.</h1>
+        <div style="align-items:flex-end;display:flex;flex-wrap:wrap;gap:32px;justify-content:space-between;margin-top:56px;">
+          <p style="color:#b8bcae;font-size:18px;line-height:1.6;margin:0;max-width:540px;">The repository is connected, the container is healthy, and this workspace is ready for the first D-Studio application iteration.</p>
+          <a class="workspace-link" href="#workspace" style="background:#c8f135;color:#11130f;display:inline-block;font-size:13px;font-weight:700;letter-spacing:.08em;padding:16px 20px;text-decoration:none;text-transform:uppercase;">View environment</a>
+        </div>
+      </section>
+
+      <footer id="workspace" class="footer" style="align-items:flex-end;border-top:1px solid #34382f;display:flex;gap:24px;justify-content:space-between;padding-top:20px;">
+        <p style="color:#767b6d;font-family:monospace;font-size:12px;line-height:1.6;margin:0;">NGINX / PORT 3000<br>DOCKER / HOST NETWORK</p>
+        <p style="font-size:13px;letter-spacing:.08em;margin:0;text-transform:uppercase;">Designed to begin</p>
+      </footer>
+    </main>
+  </body>
+</html>
