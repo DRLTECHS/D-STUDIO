@@ -1,0 +1,502 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="NDF Agreement - DRL Techs. Computer Software Trading">
+    <title>NDF Agreement — DRL Techs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+      :root { --ink:#121417; --paper:#f4f4f1; --muted:#888c93; --line:#2c3036; --accent:#e8c547; --panel:#191c20; }
+      * { box-sizing:border-box; }
+      html { scroll-behavior:smooth; }
+      body { background:var(--ink); color:var(--paper); font-family:Manrope,Arial,sans-serif; margin:0; }
+      body::before { background-image:linear-gradient(#ffffff06 1px,transparent 1px),linear-gradient(90deg,#ffffff06 1px,transparent 1px); background-size:48px 48px; content:""; inset:0; pointer-events:none; position:fixed; z-index:-1; }
+      a { color:inherit; }
+      button,input,textarea,select { font:inherit; }
+      .mono { font-family:"Space Mono",monospace; }
+      .frame { margin:auto; max-width:1440px; padding:0 60px; }
+      .eyebrow { align-items:center; color:var(--muted); display:flex; font:11px/1.4 "Space Mono",monospace; gap:12px; letter-spacing:.08em; text-transform:uppercase; }
+      .eyebrow::after { background:var(--line); content:""; height:1px; width:130px; }
+      .dot { background:var(--accent); border-radius:99px; box-shadow:0 0 12px #e8c547aa; display:inline-block; height:8px; width:8px; }
+      .button { align-items:center; background:var(--accent); border:1px solid var(--accent); color:#121417; cursor:pointer; display:inline-flex; font:700 11px "Space Mono",monospace; gap:10px; justify-content:center; letter-spacing:.08em; min-height:44px; padding:0 25px; text-decoration:none; text-transform:uppercase; transition:background .2s,color .2s; }
+      .button:hover { background:#f7d95b; }
+      .button:disabled { background:#666; cursor:not-allowed; }
+      .button--secondary { background:transparent; border:1px solid var(--accent); color:var(--accent); }
+      .button--secondary:hover { background:var(--accent); color:var(--ink); }
+      header { align-items:center; display:flex; height:76px; justify-content:space-between; }
+      .brand { align-items:center; display:flex; gap:12px; text-decoration:none; }
+      .brand-mark { align-items:center; border:1px solid #5f5225; color:var(--accent); display:grid; font-size:15px; height:24px; place-items:center; transform:rotate(45deg); width:24px; }
+      .brand-mark span { transform:rotate(-45deg); }
+      .brand-name { font:800 20px "Space Mono",monospace; letter-spacing:.14em; }
+      .studio { border-left:1px solid var(--line); color:#70757c; font:11px "Space Mono",monospace; letter-spacing:.06em; padding-left:12px; }
+      .brand-copy { align-items:center; display:flex; gap:14px; }
+      nav { display:flex; gap:32px; }
+      nav a { color:#a8adb4; font:11px "Space Mono",monospace; letter-spacing:.08em; text-decoration:none; text-transform:uppercase; }
+      nav a:hover { color:var(--accent); }
+      h1 { font-size:clamp(35px,4vw,58px); letter-spacing:-.065em; line-height:1; margin:36px 0 24px; }
+      h2 { font-size:20px; letter-spacing:-.05em; margin:32px 0 16px; font-weight:700; }
+      h3 { font-size:16px; letter-spacing:-.04em; margin:24px 0 12px; font-weight:600; }
+      p { color:#a8adb4; font:13px/1.75 "Space Mono",monospace; margin:0 0 16px; line-height:1.7; }
+      ul, ol { color:#a8adb4; font:13px/1.75 "Space Mono",monospace; margin:0 0 16px; padding-left:24px; }
+      li { margin-bottom:8px; }
+      .content { padding:80px 0; }
+      .section { margin-bottom:48px; }
+      .form-section { background:var(--panel); border:1px solid var(--line); padding:32px; margin:32px 0; }
+      .form-group { margin-bottom:24px; }
+      .form-group label { display:block; margin-bottom:8px; color:var(--paper); font:11px "Space Mono",monospace; text-transform:uppercase; letter-spacing:.06em; }
+      .form-group input,
+      .form-group textarea,
+      .form-group select { width:100%; padding:12px; background:var(--ink); border:1px solid var(--line); color:var(--paper); font:13px "Space Mono",monospace; }
+      .form-group input:focus,
+      .form-group textarea:focus,
+      .form-group select:focus { outline:none; border-color:var(--accent); box-shadow:0 0 8px rgba(232,197,71,.2); }
+      .form-group textarea { min-height:100px; resize:vertical; }
+      .signature-pad { border:2px dashed var(--line); background:var(--ink); cursor:crosshair; display:block; width:100%; height:200px; margin-top:8px; }
+      .signature-controls { display:flex; gap:12px; margin-top:12px; }
+      .signature-controls button { flex:1; }
+      .signature-info { background:var(--ink); border:1px solid var(--line); padding:16px; margin-top:16px; color:#858a92; font:11px "Space Mono",monospace; }
+      .company-sig { border-top:1px solid var(--line); padding-top:24px; margin-top:32px; }
+      .sig-block { margin:24px 0; }
+      .sig-line { height:2px; background:var(--line); width:300px; margin:32px 0 8px; }
+      .sig-name { font:700 13px "Space Mono",monospace; }
+      .sig-title { color:#858a92; font:11px "Space Mono",monospace; }
+      .document { background:var(--paper); color:var(--ink); padding:48px; margin:32px 0; font:11px "Space Mono",monospace; line-height:1.8; }
+      .document h3 { color:var(--ink); }
+      .document p { color:var(--ink); }
+      .document ul { color:var(--ink); }
+      .success-message { background:var(--panel); border-left:4px solid var(--accent); padding:16px; margin:16px 0; color:var(--paper); }
+      .error-message { background:var(--panel); border-left:4px solid:#ff6b6b; padding:16px; margin:16px 0; color:#ff9999; }
+      .center-text { text-align:center; }
+      .divider { height:1px; background:var(--line); margin:32px 0; }
+      footer { border-top:1px solid var(--line); padding:32px 0; margin-top:80px; }
+      .footer-row { align-items:center; color:#7f848b; display:flex; font:10px "Space Mono",monospace; justify-content:space-between; text-transform:uppercase; gap:32px; flex-wrap:wrap; }
+      .footer-links { display:flex; gap:22px; }
+      .footer-links a { text-decoration:none; }
+      @media (max-width:800px) { .frame { padding:0 20px; } header { height:70px; } nav,.studio { display:none; } h1 { font-size:clamp(28px,10vw,42px); margin:24px 0 16px; } .content { padding:40px 0; } .form-section { padding:16px; } .sig-line { width:200px; } .document { padding:24px; } }
+    </style>
+  </head>
+  <body>
+    <div class="frame">
+      <header>
+        <a class="brand" href="/" aria-label="DRL Techs home"><span class="brand-mark"><span>✦</span></span><span class="brand-copy"><strong class="brand-name">DRL TECHS</strong><span class="studio">// Software Trading</span></span></a>
+        <nav aria-label="Main navigation"><a href="/">Home</a><a href="/privacy.html">Privacy</a><a href="/terms.html">Terms</a></nav>
+      </header>
+
+      <main class="content">
+        <h1>Non-Disclosure Agreement</h1>
+        <p class="eyebrow"><span class="dot"></span>Automated Digital Signing</p>
+
+        <div class="section">
+          <h2>NDF Agreement Overview</h2>
+          <p>Welcome to the automated NDF (Non-Disclosure Agreement) signing system of DRL Techs. Computer Software Trading. This agreement is designed to protect confidential information shared between parties. Please review the agreement below and complete the signing process.</p>
+        </div>
+
+        <!-- NDF Agreement Document -->
+        <div class="document" id="ndf-document">
+          <h3>NON-DISCLOSURE AGREEMENT</h3>
+          <p>This Non-Disclosure Agreement ("Agreement") is entered into as of the date of execution ("Effective Date") by and between:</p>
+          
+          <p><strong>DISCLOSING PARTY:</strong> DRL TECHS. COMPUTER SOFTWARE TRADING, a company organized and existing under the laws of the Philippines, with principal office at Brgy. Bulilan Norte Pila Laguna Philippines 4010 ("Company")</p>
+          
+          <p><strong>RECEIVING PARTY:</strong> The individual or entity whose information is entered in the signature section below ("Recipient")</p>
+          
+          <p>WHEREAS, the Company wishes to disclose certain confidential and proprietary information to the Recipient for evaluation and potential business opportunity; and</p>
+          
+          <p>WHEREAS, the parties wish to protect such confidential information by entering into this Agreement;</p>
+          
+          <p>NOW, THEREFORE, in consideration of the mutual covenants contained herein, the parties agree as follows:</p>
+          
+          <h3>1. CONFIDENTIAL INFORMATION</h3>
+          <p>For purposes of this Agreement, "Confidential Information" means all non-public information disclosed by the Company to the Recipient, including but not limited to:</p>
+          <ul>
+            <li>Technical data, software, source code, and algorithms</li>
+            <li>Business plans, strategies, and financial information</li>
+            <li>Product designs, specifications, and development plans</li>
+            <li>Customer lists, pricing information, and business methods</li>
+            <li>Any other proprietary information marked as confidential</li>
+          </ul>
+          
+          <h3>2. OBLIGATIONS OF RECIPIENT</h3>
+          <p>The Recipient agrees to:</p>
+          <ul>
+            <li>Maintain the Confidential Information in strict confidence</li>
+            <li>Not disclose Confidential Information to any third party without prior written consent</li>
+            <li>Use Confidential Information solely for the purpose of evaluation</li>
+            <li>Limit access to employees who have a legitimate need to know</li>
+            <li>Protect Confidential Information with reasonable security measures</li>
+          </ul>
+          
+          <h3>3. EXCEPTIONS TO CONFIDENTIALITY</h3>
+          <p>The obligations herein do not apply to information that:</p>
+          <ul>
+            <li>Is or becomes publicly available through no breach of this Agreement</li>
+            <li>Is rightfully received from a third party without confidentiality obligations</li>
+            <li>Is independently developed by the Recipient without reference to Confidential Information</li>
+            <li>Is required to be disclosed by law or court order, provided prompt notice is given</li>
+          </ul>
+          
+          <h3>4. RETURN OF INFORMATION</h3>
+          <p>Upon request or upon termination of discussions, the Recipient shall promptly return or destroy all Confidential Information and certify such return or destruction in writing.</p>
+          
+          <h3>5. TERM</h3>
+          <p>This Agreement shall remain in effect for a period of three (3) years from the Effective Date, unless extended or terminated earlier by mutual written agreement.</p>
+          
+          <h3>6. DISCLAIMER</h3>
+          <p>The Company makes no representation or warranty regarding the accuracy or completeness of the Confidential Information. The Recipient relies on such information at its own risk.</p>
+          
+          <h3>7. NO LICENSE</h3>
+          <p>Disclosure of Confidential Information does not grant the Recipient any license or rights to any intellectual property of the Company.</p>
+          
+          <h3>8. GOVERNING LAW</h3>
+          <p>This Agreement shall be governed by and construed in accordance with the laws of the Philippines, without regard to its conflict of law principles.</p>
+          
+          <h3>9. ENTIRE AGREEMENT</h3>
+          <p>This Agreement constitutes the entire agreement between the parties concerning the subject matter hereof and supersedes all prior negotiations, representations, and agreements.</p>
+          
+          <p style="margin-top:48px;"><strong>IN WITNESS WHEREOF</strong>, the parties have executed this Agreement as of the Effective Date:</p>
+        </div>
+
+        <!-- Signing Form -->
+        <div class="form-section">
+          <h2>Complete Your Signature</h2>
+          
+          <div class="form-group">
+            <label>Full Name *</label>
+            <input type="text" id="recipientName" placeholder="Enter your full name" required>
+          </div>
+
+          <div class="form-group">
+            <label>Position/Title *</label>
+            <input type="text" id="recipientTitle" placeholder="Enter your position" required>
+          </div>
+
+          <div class="form-group">
+            <label>Company *</label>
+            <input type="text" id="recipientCompany" placeholder="Enter your company name" required>
+          </div>
+
+          <div class="form-group">
+            <label>Email Address *</label>
+            <input type="email" id="recipientEmail" placeholder="Enter your email address" required>
+          </div>
+
+          <div class="form-group">
+            <label>Date *</label>
+            <input type="date" id="signatureDate" required>
+          </div>
+
+          <div class="form-group">
+            <label>Digital Signature *</label>
+            <p style="color:#858a92; font:11px 'Space Mono',monospace; margin:0 0 8px;">Draw your signature in the box below (use mouse or touch)</p>
+            <canvas id="signaturePad" class="signature-pad"></canvas>
+            <div class="signature-controls">
+              <button class="button button--secondary" onclick="clearSignature()">Clear Signature</button>
+              <button class="button button--secondary" onclick="downloadSignaturePNG()">Download Signature</button>
+            </div>
+            <div class="signature-info">
+              💡 Click and drag to draw your signature. Make sure to capture all strokes clearly. You can clear and redraw as needed.
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="form-group" style="margin-bottom:0;">
+            <label style="display:flex; align-items:center; gap:12px; cursor:pointer;">
+              <input type="checkbox" id="agreeCheckbox" style="width:auto;"> 
+              <span>I acknowledge that I have read and agree to the terms of this Non-Disclosure Agreement</span>
+            </label>
+          </div>
+
+          <div style="display:flex; gap:12px; margin-top:24px;">
+            <button class="button" onclick="signAgreement()" id="signBtn">Sign Agreement</button>
+            <button class="button button--secondary" onclick="downloadPDF()">Download as PDF</button>
+            <button class="button button--secondary" onclick="resetForm()">Reset Form</button>
+          </div>
+        </div>
+
+        <!-- Company Signature Block -->
+        <div class="form-section">
+          <h2>Company Authorized Signatory</h2>
+          
+          <div class="company-sig">
+            <div class="sig-block">
+              <div class="sig-line"></div>
+              <div class="sig-name">MR. DEN RUSSELL CAMUS LEONARDO</div>
+              <div class="sig-title">President, DRL Techs. Computer Software Trading</div>
+            </div>
+            <div style="color:#858a92; font:11px 'Space Mono',monospace;">
+              <p>Authorized to execute this agreement on behalf of DRL Techs. Computer Software Trading</p>
+              <p>Company Address: Brgy. Bulilan Norte Pila Laguna Philippines 4010<br>
+              Contact: 09103350434 | Email: admin@drl-softechs.dev</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Success Message (Hidden) -->
+        <div id="successMessage" style="display:none;" class="success-message">
+          ✅ Agreement signed successfully! Your signed document has been prepared. You can download it below.
+        </div>
+
+        <!-- Error Message (Hidden) -->
+        <div id="errorMessage" style="display:none;" class="error-message">
+          ⚠️ <span id="errorText"></span>
+        </div>
+      </main>
+
+      <footer>
+        <div class="footer-row">
+          <div>
+            <a class="brand" href="/"><span class="brand-mark"><span>✦</span></span><strong class="brand-name" style="font-size:14px;">DRL TECHS</strong></a>
+            <p style="color:#7f848b;font:10px 'Space Mono',monospace;margin:8px 0 0;">Brgy. Bulilan Norte Pila Laguna Philippines 4010</p>
+          </div>
+          <div class="footer-links">
+            <a href="/">Home</a>
+            <a href="/privacy.html">Privacy</a>
+            <a href="/terms.html">Terms</a>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script>
+      // Initialize signature pad
+      const canvas = document.getElementById('signaturePad');
+      const ctx = canvas.getContext('2d');
+      let isDrawing = false;
+
+      // Set canvas size
+      function resizeCanvas() {
+        canvas.width = canvas.offsetWidth;
+        canvas.height = canvas.offsetHeight;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = '#e8c547';
+      }
+      resizeCanvas();
+      window.addEventListener('resize', resizeCanvas);
+
+      // Drawing events
+      canvas.addEventListener('mousedown', startDrawing);
+      canvas.addEventListener('mousemove', draw);
+      canvas.addEventListener('mouseup', stopDrawing);
+      canvas.addEventListener('mouseout', stopDrawing);
+
+      // Touch events
+      canvas.addEventListener('touchstart', handleTouch);
+      canvas.addEventListener('touchmove', handleTouch);
+      canvas.addEventListener('touchend', stopDrawing);
+
+      function startDrawing(e) {
+        isDrawing = true;
+        const rect = canvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+      }
+
+      function draw(e) {
+        if (!isDrawing) return;
+        const rect = canvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        ctx.lineTo(x, y);
+        ctx.stroke();
+      }
+
+      function handleTouch(e) {
+        e.preventDefault();
+        const touch = e.touches[0];
+        const mouseEvent = new MouseEvent(e.type === 'touchstart' ? 'mousedown' : 'mousemove', {
+          clientX: touch.clientX,
+          clientY: touch.clientY
+        });
+        canvas.dispatchEvent(mouseEvent);
+      }
+
+      function stopDrawing() {
+        isDrawing = false;
+      }
+
+      function clearSignature() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+
+      function resetForm() {
+        document.getElementById('recipientName').value = '';
+        document.getElementById('recipientTitle').value = '';
+        document.getElementById('recipientCompany').value = '';
+        document.getElementById('recipientEmail').value = '';
+        document.getElementById('signatureDate').value = '';
+        document.getElementById('agreeCheckbox').checked = false;
+        clearSignature();
+        document.getElementById('successMessage').style.display = 'none';
+        document.getElementById('errorMessage').style.display = 'none';
+      }
+
+      function validateForm() {
+        const name = document.getElementById('recipientName').value.trim();
+        const title = document.getElementById('recipientTitle').value.trim();
+        const company = document.getElementById('recipientCompany').value.trim();
+        const email = document.getElementById('recipientEmail').value.trim();
+        const date = document.getElementById('signatureDate').value;
+        const agree = document.getElementById('agreeCheckbox').checked;
+
+        if (!name) {
+          showError('Please enter your full name');
+          return false;
+        }
+        if (!title) {
+          showError('Please enter your position/title');
+          return false;
+        }
+        if (!company) {
+          showError('Please enter your company name');
+          return false;
+        }
+        if (!email || !email.includes('@')) {
+          showError('Please enter a valid email address');
+          return false;
+        }
+        if (!date) {
+          showError('Please select a date');
+          return false;
+        }
+
+        // Check if signature pad has content
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const data = imageData.data;
+        let hasSignature = false;
+        for (let i = 0; i < data.length; i += 4) {
+          if (data[i + 3] > 0) {
+            hasSignature = true;
+            break;
+          }
+        }
+        if (!hasSignature) {
+          showError('Please provide your digital signature');
+          return false;
+        }
+
+        if (!agree) {
+          showError('Please agree to the Non-Disclosure Agreement');
+          return false;
+        }
+
+        return true;
+      }
+
+      function showError(message) {
+        document.getElementById('errorText').textContent = message;
+        document.getElementById('errorMessage').style.display = 'block';
+        document.getElementById('successMessage').style.display = 'none';
+      }
+
+      function signAgreement() {
+        if (!validateForm()) {
+          return;
+        }
+
+        // Mark NDA as signed in sessionStorage
+        sessionStorage.setItem('ndaSigned', 'true');
+
+        // Notify parent window if this was opened from contact form
+        if (window.opener) {
+          window.opener.postMessage({ type: 'ndaSigned', signed: true }, '*');
+        }
+
+        document.getElementById('errorMessage').style.display = 'none';
+        document.getElementById('successMessage').style.display = 'block';
+        console.log('Agreement signed successfully');
+
+        // Show a confirmation message
+        const successMsg = document.getElementById('successMessage');
+        successMsg.innerHTML += '<br><p style="margin-top:12px; color:#a8adb4;">✓ You have successfully signed the NDA. You can now close this window and return to submit your inquiry.</p>';
+      }
+
+      function downloadSignaturePNG() {
+        const link = document.createElement('a');
+        link.href = canvas.toDataURL('image/png');
+        link.download = 'signature.png';
+        link.click();
+      }
+
+      function downloadPDF() {
+        if (!validateForm()) {
+          return;
+        }
+
+        const element = document.getElementById('ndf-document');
+        const recipientName = document.getElementById('recipientName').value;
+        const recipientTitle = document.getElementById('recipientTitle').value;
+        const recipientCompany = document.getElementById('recipientCompany').value;
+        const recipientEmail = document.getElementById('recipientEmail').value;
+        const signatureDate = document.getElementById('signatureDate').value;
+
+        // Create content for PDF
+        const pdfContent = `
+          <html>
+            <head>
+              <style>
+                body { font-family: Arial, sans-serif; line-height: 1.6; margin: 40px; }
+                h3 { margin-top: 30px; margin-bottom: 10px; }
+                ul { margin-left: 20px; }
+                .sig-block { margin-top: 50px; }
+                .sig-line { border-bottom: 1px solid #000; width: 300px; margin-bottom: 5px; }
+                .divider { border-bottom: 1px solid #000; margin: 30px 0; }
+              </style>
+            </head>
+            <body>
+              ${element.innerHTML}
+              
+              <div style="margin-top: 50px;">
+                <h3>RECIPIENT SIGNATURE</h3>
+                <div class="sig-block">
+                  <div class="sig-line"></div>
+                  <p><strong>${recipientName}</strong></p>
+                  <p>Position: ${recipientTitle}</p>
+                  <p>Company: ${recipientCompany}</p>
+                  <p>Email: ${recipientEmail}</p>
+                  <p>Date: ${signatureDate}</p>
+                </div>
+              </div>
+
+              <div class="divider"></div>
+
+              <div style="margin-top: 30px;">
+                <h3>COMPANY SIGNATORY</h3>
+                <div class="sig-block">
+                  <div class="sig-line"></div>
+                  <p><strong>MR. DEN RUSSELL CAMUS LEONARDO</strong></p>
+                  <p>President, DRL Techs. Computer Software Trading</p>
+                  <p>Brgy. Bulilan Norte Pila Laguna Philippines 4010</p>
+                  <p>Phone: 09103350434</p>
+                  <p>Email: admin@drl-softechs.dev</p>
+                </div>
+              </div>
+            </body>
+          </html>
+        `;
+
+        const opt = {
+          margin: 10,
+          filename: `NDF_Agreement_${recipientName.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`,
+          image: { type: 'jpeg', quality: 0.98 },
+          html2canvas: { scale: 2 },
+          jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4' }
+        };
+
+        html2pdf().set(opt).from(pdfContent).save();
+      }
+
+      // Set today's date as default
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('signatureDate').value = today;
+    </script>
+  </body>
+</html>

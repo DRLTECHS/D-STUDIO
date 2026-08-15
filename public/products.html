@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Products - DRL Techs. Computer Software Trading">
+    <title>Products & Services — DRL Techs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+      :root { --ink:#121417; --paper:#f4f4f1; --muted:#888c93; --line:#2c3036; --accent:#e8c547; --panel:#191c20; }
+      * { box-sizing:border-box; }
+      html { scroll-behavior:smooth; }
+      body { background:var(--ink); color:var(--paper); font-family:Manrope,Arial,sans-serif; margin:0; }
+      body::before { background-image:linear-gradient(#ffffff06 1px,transparent 1px),linear-gradient(90deg,#ffffff06 1px,transparent 1px); background-size:48px 48px; content:""; inset:0; pointer-events:none; position:fixed; z-index:-1; }
+      a { color:inherit; }
+      button,input { font:inherit; }
+      .mono { font-family:"Space Mono",monospace; }
+      .frame { margin:auto; max-width:1440px; padding:0 60px; }
+      .eyebrow { align-items:center; color:var(--muted); display:flex; font:11px/1.4 "Space Mono",monospace; gap:12px; letter-spacing:.08em; text-transform:uppercase; }
+      .eyebrow::after { background:var(--line); content:""; height:1px; width:130px; }
+      .dot { background:var(--accent); border-radius:99px; box-shadow:0 0 12px #e8c547aa; display:inline-block; height:8px; width:8px; }
+      .button { align-items:center; background:var(--accent); border:1px solid var(--accent); color:#121417; cursor:pointer; display:inline-flex; font:700 11px "Space Mono",monospace; gap:10px; justify-content:center; letter-spacing:.08em; min-height:44px; padding:0 25px; text-decoration:none; text-transform:uppercase; transition:background .2s,color .2s; }
+      .button:hover { background:#f7d95b; }
+      .button:disabled { background:#666; cursor:not-allowed; opacity:.6; }
+      .button--secondary { background:transparent; border:1px solid var(--accent); color:var(--accent); }
+      .button--secondary:hover { background:var(--accent); color:var(--ink); }
+      .button--small { padding:0 16px; min-height:36px; font-size:9px; }
+      header { align-items:center; display:flex; height:76px; justify-content:space-between; }
+      .brand { align-items:center; display:flex; gap:12px; text-decoration:none; }
+      .brand-mark { align-items:center; border:1px solid #5f5225; color:var(--accent); display:grid; font-size:15px; height:24px; place-items:center; transform:rotate(45deg); width:24px; }
+      .brand-mark span { transform:rotate(-45deg); }
+      .brand-name { font:800 20px "Space Mono",monospace; letter-spacing:.14em; }
+      .studio { border-left:1px solid var(--line); color:#70757c; font:11px "Space Mono",monospace; letter-spacing:.06em; padding-left:12px; }
+      .brand-copy { align-items:center; display:flex; gap:14px; }
+      nav { display:flex; gap:32px; align-items:center; }
+      nav a { color:#a8adb4; font:11px "Space Mono",monospace; letter-spacing:.08em; text-decoration:none; text-transform:uppercase; }
+      nav a:hover { color:var(--accent); }
+      .cart-badge { background:var(--accent); color:var(--ink); font:700 9px "Space Mono",monospace; padding:4px 8px; border-radius:2px; margin-left:4px; }
+      h1 { font-size:clamp(35px,4vw,58px); letter-spacing:-.065em; line-height:1; margin:36px 0 24px; }
+      h2 { font-size:20px; letter-spacing:-.05em; margin:32px 0 16px; font-weight:700; }
+      h3 { font-size:16px; letter-spacing:-.04em; margin:24px 0 12px; font-weight:600; }
+      p { color:#a8adb4; font:13px/1.75 "Space Mono",monospace; margin:0 0 16px; line-height:1.7; }
+      .content { padding:80px 0; }
+      .section { margin-bottom:48px; }
+      .product-grid { display:grid; gap:24px; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); margin:32px 0; }
+      .product-card { background:var(--panel); border:1px solid var(--line); overflow:hidden; transition:transform .2s, box-shadow .2s; cursor:pointer; }
+      .product-card:hover { transform:translateY(-4px); box-shadow:0 0 20px rgba(232,197,71,.15); }
+      .product-header { background:var(--ink); padding:20px; min-height:100px; display:flex; flex-direction:column; justify-content:flex-end; }
+      .product-category { color:var(--accent); font:10px "Space Mono",monospace; text-transform:uppercase; letter-spacing:.06em; }
+      .product-name { font:600 16px Manrope,Arial; margin:8px 0 0; }
+      .product-body { padding:20px; }
+      .product-description { color:#858a92; font:11px "Space Mono",monospace; margin:0 0 16px; }
+      .product-price { font:700 20px "Space Mono",monospace; color:var(--accent); margin:16px 0; }
+      .product-features { list-style:none; margin:12px 0; padding:0; }
+      .product-features li { color:#858a92; font:11px "Space Mono",monospace; margin:6px 0; padding-left:16px; position:relative; }
+      .product-features li::before { content:"→"; position:absolute; left:0; color:var(--accent); }
+      .qty-selector { display:flex; gap:8px; align-items:center; margin:12px 0; }
+      .qty-selector input { width:50px; padding:6px; background:var(--ink); border:1px solid var(--line); color:var(--paper); }
+      .badge { display:inline-block; background:var(--accent); color:var(--ink); padding:4px 8px; font:700 9px "Space Mono",monospace; margin-bottom:8px; }
+      .cart-summary { background:var(--panel); border:1px solid var(--line); padding:24px; margin:32px 0; }
+      .summary-row { display:flex; justify-content:space-between; margin:12px 0; font:13px "Space Mono",monospace; }
+      .summary-row.total { border-top:1px solid var(--line); padding-top:12px; font-weight:700; font-size:16px; }
+      .empty-state { text-align:center; padding:60px 20px; }
+      .empty-state-icon { font-size:48px; margin-bottom:16px; }
+      footer { border-top:1px solid var(--line); padding:32px 0; margin-top:80px; }
+      .footer-row { align-items:center; color:#7f848b; display:flex; font:10px "Space Mono",monospace; justify-content:space-between; text-transform:uppercase; gap:32px; flex-wrap:wrap; }
+      .footer-links { display:flex; gap:22px; }
+      .footer-links a { text-decoration:none; }
+      @media (max-width:800px) { .frame { padding:0 20px; } header { height:70px; flex-direction:column; } nav,.studio { display:none; } h1 { font-size:clamp(28px,10vw,42px); margin:24px 0 16px; } .content { padding:40px 0; } .product-grid { grid-template-columns:1fr; } }
+    </style>
+  </head>
+  <body>
+    <div class="frame">
+      <header>
+        <a class="brand" href="/" aria-label="DRL Techs home"><span class="brand-mark"><span>✦</span></span><span class="brand-copy"><strong class="brand-name">DRL TECHS</strong><span class="studio">// Software Trading</span></span></a>
+        <nav aria-label="Main navigation">
+          <a href="/">Home</a>
+          <a href="products.html">Products</a>
+          <a href="contact.html">Contact</a>
+          <a href="cart.html">Cart <span class="cart-badge" id="cartCount">0</span></a>
+        </nav>
+      </header>
+
+      <main class="content">
+        <h1>Products & Services</h1>
+        <p class="eyebrow"><span class="dot"></span>Enterprise Software Solutions</p>
+
+        <div class="section">
+          <h2>Available Solutions</h2>
+          <p>Choose from our suite of enterprise software solutions. All purchases include support and maintenance services.</p>
+        </div>
+
+        <div class="product-grid" id="productGrid">
+          <!-- Products will be inserted here by JavaScript -->
+        </div>
+
+        <!-- Cart Summary -->
+        <div id="cartSummarySection" style="display:none;">
+          <div class="cart-summary">
+            <h2>Order Summary</h2>
+            <div class="summary-row">
+              <span>Subtotal:</span>
+              <span id="subtotal">$0.00</span>
+            </div>
+            <div class="summary-row">
+              <span>Tax (12%):</span>
+              <span id="taxAmount">$0.00</span>
+            </div>
+            <div class="summary-row">
+              <span>Shipping:</span>
+              <span id="shippingCost">$0.00</span>
+            </div>
+            <div class="summary-row total">
+              <span>Total Amount:</span>
+              <span id="totalAmount">$0.00</span>
+            </div>
+            <button class="button" onclick="proceedToCheckout()" style="width:100%; margin-top:24px;">Proceed to Checkout</button>
+          </div>
+        </div>
+      </main>
+
+      <footer>
+        <div class="footer-row">
+          <div>
+            <a class="brand" href="/"><span class="brand-mark"><span>✦</span></span><strong class="brand-name" style="font-size:14px;">DRL TECHS</strong></a>
+            <p style="color:#7f848b;font:10px 'Space Mono',monospace;margin:8px 0 0;">Brgy. Bulilan Norte Pila Laguna Philippines 4010</p>
+          </div>
+          <div class="footer-links">
+            <a href="/">Home</a>
+            <a href="products.html">Products</a>
+            <a href="contact.html">Contact</a>
+            <a href="ndf-agreement.html">NDA</a>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script>
+      // Product catalog
+      const products = [
+        {
+          id: 1,
+          name: "Basic Software License",
+          category: "Licensing",
+          price: 999,
+          description: "Single user software license with 1 year support",
+          features: ["1 User License", "Email Support", "1 Year Updates", "Basic Documentation"]
+        },
+        {
+          id: 2,
+          name: "Professional License",
+          category: "Licensing",
+          price: 2999,
+          description: "Multi-user professional license with priority support",
+          features: ["Up to 10 Users", "Priority Support", "2 Years Updates", "Advanced Documentation", "Training Included"]
+        },
+        {
+          id: 3,
+          name: "Enterprise Suite",
+          category: "Enterprise",
+          price: 9999,
+          description: "Complete enterprise solution with dedicated support",
+          features: ["Unlimited Users", "24/7 Support", "Lifetime Updates", "Custom Integration", "Dedicated Account Manager"]
+        },
+        {
+          id: 4,
+          name: "Consulting Services",
+          category: "Services",
+          price: 5000,
+          description: "Expert consulting per hour",
+          features: ["Expert Guidance", "Custom Solutions", "Implementation Support", "Hourly Rate"]
+        },
+        {
+          id: 5,
+          name: "Implementation Package",
+          category: "Services",
+          price: 15000,
+          description: "Full implementation and deployment service",
+          features: ["System Setup", "Data Migration", "Team Training", "Go-live Support"]
+        },
+        {
+          id: 6,
+          name: "Maintenance & Support",
+          category: "Support",
+          price: 1500,
+          description: "Annual maintenance and support package",
+          features: ["Bug Fixes", "Performance Monitoring", "Security Updates", "Help Desk Support"]
+        }
+      ];
+
+      // Initialize cart from localStorage
+      let cart = JSON.parse(localStorage.getItem('drlCart')) || [];
+
+      // Render products
+      function renderProducts() {
+        const grid = document.getElementById('productGrid');
+        grid.innerHTML = products.map(product => `
+          <div class="product-card">
+            <div class="product-header">
+              <div class="product-category">${product.category}</div>
+              <div class="product-name">${product.name}</div>
+            </div>
+            <div class="product-body">
+              <p class="product-description">${product.description}</p>
+              <ul class="product-features">
+                ${product.features.map(f => `<li>${f}</li>`).join('')}
+              </ul>
+              <div class="product-price">$${product.price.toLocaleString()}</div>
+              <div class="qty-selector">
+                <label style="font:11px 'Space Mono',monospace; text-transform:uppercase;">Qty:</label>
+                <input type="number" id="qty-${product.id}" min="1" value="1">
+              </div>
+              <button class="button button--small" onclick="addToCart(${product.id})" style="width:100%;">Add to Cart</button>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      function addToCart(productId) {
+        const product = products.find(p => p.id === productId);
+        const qty = parseInt(document.getElementById(`qty-${productId}`).value) || 1;
+        const existingItem = cart.find(item => item.id === productId);
+
+        if (existingItem) {
+          existingItem.quantity += qty;
+        } else {
+          cart.push({ ...product, quantity: qty });
+        }
+
+        localStorage.setItem('drlCart', JSON.stringify(cart));
+        updateCartUI();
+        alert(`Added ${qty} x ${product.name} to cart`);
+        document.getElementById(`qty-${productId}`).value = 1;
+      }
+
+      function updateCartUI() {
+        const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+        document.getElementById('cartCount').textContent = count;
+        
+        if (cart.length > 0) {
+          updateCartSummary();
+        }
+      }
+
+      function updateCartSummary() {
+        const section = document.getElementById('cartSummarySection');
+        if (cart.length === 0) {
+          section.style.display = 'none';
+          return;
+        }
+
+        section.style.display = 'block';
+        const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        const tax = subtotal * 0.12;
+        const shipping = subtotal > 5000 ? 0 : 500;
+        const total = subtotal + tax + shipping;
+
+        document.getElementById('subtotal').textContent = '$' + subtotal.toLocaleString('en-US', { minimumFractionDigits: 2 });
+        document.getElementById('taxAmount').textContent = '$' + tax.toLocaleString('en-US', { minimumFractionDigits: 2 });
+        document.getElementById('shippingCost').textContent = shipping === 0 ? 'FREE' : '$' + shipping.toLocaleString('en-US', { minimumFractionDigits: 2 });
+        document.getElementById('totalAmount').textContent = '$' + total.toLocaleString('en-US', { minimumFractionDigits: 2 });
+      }
+
+      function proceedToCheckout() {
+        window.location.href = 'checkout.html';
+      }
+
+      // Initialize
+      renderProducts();
+      updateCartUI();
+    </script>
+  </body>
+</html>

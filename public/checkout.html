@@ -1,0 +1,579 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Checkout - DRL Techs">
+    <title>Checkout — DRL Techs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/swiftpay-sdk@latest/dist/swiftpay.min.js"></script>
+    <style>
+      :root { --ink:#121417; --paper:#f4f4f1; --muted:#888c93; --line:#2c3036; --accent:#e8c547; --panel:#191c20; }
+      * { box-sizing:border-box; }
+      html { scroll-behavior:smooth; }
+      body { background:var(--ink); color:var(--paper); font-family:Manrope,Arial,sans-serif; margin:0; }
+      body::before { background-image:linear-gradient(#ffffff06 1px,transparent 1px),linear-gradient(90deg,#ffffff06 1px,transparent 1px); background-size:48px 48px; content:""; inset:0; pointer-events:none; position:fixed; z-index:-1; }
+      a { color:inherit; }
+      button,input,select,textarea { font:inherit; }
+      .mono { font-family:"Space Mono",monospace; }
+      .frame { margin:auto; max-width:1440px; padding:0 60px; }
+      .eyebrow { align-items:center; color:var(--muted); display:flex; font:11px/1.4 "Space Mono",monospace; gap:12px; letter-spacing:.08em; text-transform:uppercase; }
+      .eyebrow::after { background:var(--line); content:""; height:1px; width:130px; }
+      .dot { background:var(--accent); border-radius:99px; box-shadow:0 0 12px #e8c547aa; display:inline-block; height:8px; width:8px; }
+      .button { align-items:center; background:var(--accent); border:1px solid var(--accent); color:#121417; cursor:pointer; display:inline-flex; font:700 11px "Space Mono",monospace; gap:10px; justify-content:center; letter-spacing:.08em; min-height:44px; padding:0 25px; text-decoration:none; text-transform:uppercase; transition:background .2s,color .2s; }
+      .button:hover { background:#f7d95b; }
+      .button:disabled { background:#666; cursor:not-allowed; opacity:.6; }
+      .button--secondary { background:transparent; border:1px solid var(--accent); color:var(--accent); }
+      .button--secondary:hover { background:var(--accent); color:var(--ink); }
+      header { align-items:center; display:flex; height:76px; justify-content:space-between; }
+      .brand { align-items:center; display:flex; gap:12px; text-decoration:none; }
+      .brand-mark { align-items:center; border:1px solid #5f5225; color:var(--accent); display:grid; font-size:15px; height:24px; place-items:center; transform:rotate(45deg); width:24px; }
+      .brand-mark span { transform:rotate(-45deg); }
+      .brand-name { font:800 20px "Space Mono",monospace; letter-spacing:.14em; }
+      .studio { border-left:1px solid var(--line); color:#70757c; font:11px "Space Mono",monospace; letter-spacing:.06em; padding-left:12px; }
+      .brand-copy { align-items:center; display:flex; gap:14px; }
+      nav { display:flex; gap:32px; }
+      nav a { color:#a8adb4; font:11px "Space Mono",monospace; letter-spacing:.08em; text-decoration:none; text-transform:uppercase; }
+      nav a:hover { color:var(--accent); }
+      h1 { font-size:clamp(35px,4vw,58px); letter-spacing:-.065em; line-height:1; margin:36px 0 24px; }
+      h2 { font-size:20px; letter-spacing:-.05em; margin:32px 0 16px; font-weight:700; }
+      h3 { font-size:16px; letter-spacing:-.04em; margin:24px 0 12px; font-weight:600; }
+      p { color:#a8adb4; font:13px/1.75 "Space Mono",monospace; margin:0 0 16px; line-height:1.7; }
+      .content { padding:80px 0; }
+      .checkout-layout { display:grid; grid-template-columns:2fr 1fr; gap:48px; margin:32px 0; }
+      .checkout-form { background:var(--panel); border:1px solid var(--line); padding:32px; }
+      .form-section { margin-bottom:32px; }
+      .form-section h3 { margin-top:0; }
+      .form-row { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+      .form-row.full { grid-template-columns:1fr; }
+      .form-group { margin-bottom:16px; }
+      .form-group label { display:block; margin-bottom:8px; color:var(--paper); font:11px "Space Mono",monospace; text-transform:uppercase; letter-spacing:.06em; }
+      .form-group input,
+      .form-group select,
+      .form-group textarea { width:100%; padding:12px; background:var(--ink); border:1px solid var(--line); color:var(--paper); font:13px "Space Mono",monospace; }
+      .form-group input:focus,
+      .form-group select:focus,
+      .form-group textarea:focus { outline:none; border-color:var(--accent); box-shadow:0 0 8px rgba(232,197,71,.2); }
+      .order-summary { background:var(--panel); border:1px solid var(--line); padding:24px; height:fit-content; position:sticky; top:100px; }
+      .summary-row { display:flex; justify-content:space-between; margin:12px 0; font:13px "Space Mono",monospace; }
+      .summary-row.total { border-top:1px solid var(--line); padding-top:12px; font-weight:700; font-size:18px; }
+      .payment-methods { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:16px 0; }
+      .payment-method { padding:12px; border:2px solid var(--line); text-align:center; cursor:pointer; transition:all .2s; }
+      .payment-method:hover { border-color:var(--accent); }
+      .payment-method.selected { border-color:var(--accent); background:rgba(232,197,71,.1); }
+      .payment-method input { display:none; }
+      .swiftpay-container { background:var(--ink); border:1px solid var(--line); padding:20px; margin:16px 0; border-radius:4px; min-height:300px; }
+      .institution-grid { display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:12px; margin-top:16px; }
+      .institution-option { align-items:flex-start; background:var(--panel); border:1px solid var(--line); color:var(--paper); cursor:pointer; display:flex; flex-direction:column; gap:8px; min-height:88px; padding:16px 14px; text-align:left; transition:all .2s ease; }
+      .institution-option:hover { border-color:var(--accent); transform:translateY(-1px); }
+      .institution-option.selected { background:rgba(232,197,71,.08); border-color:var(--accent); box-shadow:inset 0 0 0 1px rgba(232,197,71,.2); }
+      .institution-name { font:700 12px "Space Mono",monospace; letter-spacing:.08em; text-transform:uppercase; }
+      .institution-code { color:#a8adb4; font:11px "Space Mono",monospace; letter-spacing:.06em; text-transform:uppercase; }
+      .institution-description { color:#7f848b; font:11px/1.5 "Space Mono",monospace; }
+      .divider { height:1px; background:var(--line); margin:24px 0; }
+      .success-message { background:var(--panel); border-left:4px solid var(--accent); padding:16px; margin:16px 0; color:var(--paper); }
+      .error-message { background:var(--panel); border-left:4px solid:#ff6b6b; padding:16px; margin:16px 0; color:#ff9999; }
+      footer { border-top:1px solid var(--line); padding:32px 0; margin-top:80px; }
+      .footer-row { align-items:center; color:#7f848b; display:flex; font:10px "Space Mono",monospace; justify-content:space-between; text-transform:uppercase; gap:32px; flex-wrap:wrap; }
+      .footer-links { display:flex; gap:22px; }
+      .footer-links a { text-decoration:none; }
+      @media (max-width:800px) { .frame { padding:0 20px; } header { height:70px; } nav,.studio { display:none; } h1 { font-size:clamp(28px,10vw,42px); margin:24px 0 16px; } .content { padding:40px 0; } .checkout-layout { grid-template-columns:1fr; } .order-summary { position:static; } .form-row { grid-template-columns:1fr; } .payment-methods { grid-template-columns:1fr; } }
+    </style>
+  </head>
+  <body>
+    <div class="frame">
+      <header>
+        <a class="brand" href="/" aria-label="DRL Techs home"><span class="brand-mark"><span>✦</span></span><span class="brand-copy"><strong class="brand-name">DRL TECHS</strong><span class="studio">// Software Trading</span></span></a>
+        <nav aria-label="Main navigation">
+          <a href="/">Home</a>
+          <a href="products.html">Products</a>
+          <a href="cart.html">Cart</a>
+        </nav>
+      </header>
+
+      <main class="content">
+        <h1>Checkout</h1>
+        <p class="eyebrow"><span class="dot"></span>Complete Your Order</p>
+
+        <div class="checkout-layout">
+          <div class="checkout-form">
+            <!-- Shipping Information -->
+            <form id="checkoutForm" onsubmit="handleCheckout(event)">
+              <div class="form-section">
+                <h3>📍 Shipping Information</h3>
+                <div class="form-row full">
+                  <div class="form-group">
+                    <label>Full Name *</label>
+                    <input type="text" id="shipName" required>
+                  </div>
+                </div>
+                <div class="form-row full">
+                  <div class="form-group">
+                    <label>Email Address *</label>
+                    <input type="email" id="shipEmail" required>
+                  </div>
+                </div>
+                <div class="form-row full">
+                  <div class="form-group">
+                    <label>Phone Number *</label>
+                    <input type="tel" id="shipPhone" required>
+                  </div>
+                </div>
+                <div class="form-row full">
+                  <div class="form-group">
+                    <label>Company Name</label>
+                    <input type="text" id="shipCompany">
+                  </div>
+                </div>
+                <div class="form-row full">
+                  <div class="form-group">
+                    <label>Street Address *</label>
+                    <input type="text" id="shipAddress" required>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>City *</label>
+                    <input type="text" id="shipCity" required>
+                  </div>
+                  <div class="form-group">
+                    <label>State/Province *</label>
+                    <input type="text" id="shipState" required>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>Postal Code *</label>
+                    <input type="text" id="shipPostal" required>
+                  </div>
+                  <div class="form-group">
+                    <label>Country *</label>
+                    <input type="text" id="shipCountry" value="Philippines" required>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Billing Information -->
+              <div class="form-section">
+                <h3>💳 Billing Information</h3>
+                <label style="display:flex; align-items:center; gap:12px; cursor:pointer; margin-bottom:16px;">
+                  <input type="checkbox" id="sameAsShip" checked onchange="toggleBillingForm()">
+                  <span style="font:13px 'Space Mono',monospace;">Same as shipping address</span>
+                </label>
+                <div id="billingForm" style="display:none;">
+                  <div class="form-row full">
+                    <div class="form-group">
+                      <label>Street Address *</label>
+                      <input type="text" id="billAddress">
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label>City *</label>
+                      <input type="text" id="billCity">
+                    </div>
+                    <div class="form-group">
+                      <label>State/Province *</label>
+                      <input type="text" id="billState">
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label>Postal Code *</label>
+                      <input type="text" id="billPostal">
+                    </div>
+                    <div class="form-group">
+                      <label>Country *</label>
+                      <input type="text" id="billCountry" value="Philippines">
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Payment Method -->
+              <div class="form-section">
+                <h3>💰 Payment Method</h3>
+                <div class="payment-methods">
+                  <label class="payment-method selected">
+                    <input type="radio" name="paymentMethod" value="swiftpay" checked>
+                    <span style="font:11px 'Space Mono',monospace; text-transform:uppercase;">SwiftPay</span>
+                  </label>
+                  <label class="payment-method">
+                    <input type="radio" name="paymentMethod" value="bank_transfer">
+                    <span style="font:11px 'Space Mono',monospace; text-transform:uppercase;">Bank Transfer</span>
+                  </label>
+                </div>
+
+                <!-- SwiftPay Integration -->
+                <div id="swiftpaySection" class="swiftpay-container">
+                  <p style="margin:0 0 12px; color:var(--accent); font:11px 'Space Mono',monospace; text-transform:uppercase; letter-spacing:.08em;">Choose your SwiftPay institution</p>
+                  <div id="swiftpayInstitutionSelector" class="institution-grid"></div>
+                  <div id="swiftpaySelectedInstitution" style="margin-top:16px; color:#a8adb4; font:11px 'Space Mono',monospace; letter-spacing:.06em; text-transform:uppercase;">Selected: Maya</div>
+                  <div id="swiftpay-frame" style="margin-top:16px; display:none;"></div>
+                </div>
+
+                <div id="bankTransferSection" style="display:none; background:var(--ink); border:1px solid var(--line); padding:20px; border-radius:4px;">
+                  <p style="color:var(--accent); font:11px 'Space Mono',monospace; text-transform:uppercase; margin:0 0 12px;"><strong>Bank Transfer Details</strong></p>
+                  <p style="margin:8px 0; font:13px 'Space Mono',monospace;">Bank: DRL Tech Bank<br>Account: 1234567890<br>Swift: DRLTPH01</p>
+                  <p style="color:#858a92; font:11px 'Space Mono',monospace; margin:12px 0 0;">Please complete bank transfer and provide proof of payment with your order.</p>
+                </div>
+              </div>
+
+              <div class="divider"></div>
+
+              <div class="form-section">
+                <button type="submit" class="button" style="width:100%;">Complete Order</button>
+                <a href="cart.html" class="button button--secondary" style="width:100%; margin-top:12px; text-align:center;">Back to Cart</a>
+              </div>
+            </form>
+          </div>
+
+          <!-- Order Summary -->
+          <div class="order-summary" id="orderSummary"></div>
+        </div>
+
+        <div id="errorMessage" style="display:none;" class="error-message">⚠️ <span id="errorText"></span></div>
+        <div id="successMessage" style="display:none;" class="success-message">✅ Order placed successfully! Redirecting to order tracking...</div>
+      </main>
+
+      <footer>
+        <div class="footer-row">
+          <div>
+            <a class="brand" href="/"><span class="brand-mark"><span>✦</span></span><strong class="brand-name" style="font-size:14px;">DRL TECHS</strong></a>
+            <p style="color:#7f848b;font:10px 'Space Mono',monospace;margin:8px 0 0;">Brgy. Bulilan Norte Pila Laguna Philippines 4010</p>
+          </div>
+          <div class="footer-links">
+            <a href="/">Home</a>
+            <a href="products.html">Products</a>
+            <a href="contact.html">Contact</a>
+            <a href="ndf-agreement.html">NDA</a>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script>
+      let cart = JSON.parse(localStorage.getItem('drlCart')) || [];
+      let swiftpayInitialized = false;
+      let selectedSwiftPayInstitution = null;
+
+      const swiftpayInstitutions = [
+        { key: 'swiftpay_maya', label: 'Maya', code: 'MAYA_WALLET', description: 'Instant wallet payment' },
+        { key: 'swiftpay_gcash', label: 'GCash', code: 'GCASH', description: 'Fast mobile wallet checkout' },
+        { key: 'swiftpay_bpi', label: 'BPI', code: 'BPI', description: 'Online banking redirect' },
+        { key: 'swiftpay_bdo', label: 'BDO', code: 'BDO', description: 'Online banking redirect' },
+        { key: 'swiftpay_unionbank', label: 'UnionBank', code: 'UNIONBANK', description: 'Secure bank redirect' },
+        { key: 'swiftpay_metrobank', label: 'Metrobank', code: 'METROBANK', description: 'Secure bank redirect' },
+        { key: 'swiftpay_landbank', label: 'LandBank', code: 'LANDBANK', description: 'Government bank redirect' },
+        { key: 'swiftpay_rcbc', label: 'RCBC', code: 'RCBC', description: 'Digital banking redirect' }
+      ];
+
+      function renderSwiftPayInstitutions() {
+        const container = document.getElementById('swiftpayInstitutionSelector');
+        if (!container) return;
+
+        selectedSwiftPayInstitution = selectedSwiftPayInstitution || swiftpayInstitutions[0];
+
+        container.innerHTML = swiftpayInstitutions.map((institution) => `
+          <button
+            type="button"
+            class="institution-option ${selectedSwiftPayInstitution.key === institution.key ? 'selected' : ''}"
+            data-institution="${institution.key}"
+            aria-pressed="${selectedSwiftPayInstitution.key === institution.key}"
+          >
+            <span class="institution-name">${institution.label}</span>
+            <span class="institution-code">${institution.code}</span>
+            <span class="institution-description">${institution.description}</span>
+          </button>
+        `).join('');
+
+        container.querySelectorAll('.institution-option').forEach((button) => {
+          button.addEventListener('click', () => {
+            selectedSwiftPayInstitution = swiftpayInstitutions.find((institution) => institution.key === button.dataset.institution) || swiftpayInstitutions[0];
+            renderSwiftPayInstitutions();
+          });
+        });
+
+        const selectedNode = document.getElementById('swiftpaySelectedInstitution');
+        if (selectedNode) {
+          selectedNode.textContent = 'Selected: ' + selectedSwiftPayInstitution.label + ' (' + selectedSwiftPayInstitution.code + ')';
+        }
+      }
+
+      // Initialize SwiftPay
+      function initializeSwiftPay() {
+        if (swiftpayInitialized) return;
+
+        const swiftpayConfig = {
+          merchantId: 'DEMO_MERCHANT_DRL_2026',
+          apiKey: 'demo_api_key_drl_techs_2026',
+          environment: 'sandbox',
+          language: 'en',
+          currency: 'PHP'
+        };
+
+        if (window.SwiftPay) {
+          SwiftPay.initialize(swiftpayConfig);
+          console.log('SwiftPay initialized in sandbox mode');
+        } else {
+          console.warn('SwiftPay SDK not loaded. Using payment redirect simulation mode.');
+        }
+
+        selectedSwiftPayInstitution = swiftpayInstitutions[0];
+        renderSwiftPayInstitutions();
+        swiftpayInitialized = true;
+      }
+
+      function renderOrderSummary() {
+        if (cart.length === 0) {
+          window.location.href = 'products.html';
+          return;
+        }
+
+        const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        const tax = subtotal * 0.12;
+        const shipping = subtotal > 5000 ? 0 : 500;
+        const total = subtotal + tax + shipping;
+
+        document.getElementById('orderSummary').innerHTML = `
+          <h2 style="margin-top:0;">Order Summary</h2>
+          <div style="background:var(--ink); border:1px solid var(--line); padding:12px; margin-bottom:16px; max-height:200px; overflow-y:auto;">
+            ${cart.map(item => `
+              <div class="summary-row" style="padding:8px 0; border-bottom:1px solid var(--line);">
+                <span>${item.name} (×${item.quantity})</span>
+                <span>$${(item.price * item.quantity).toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
+              </div>
+            `).join('')}
+          </div>
+          <div class="summary-row">
+            <span>Subtotal:</span>
+            <span>$${subtotal.toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
+          </div>
+          <div class="summary-row">
+            <span>Tax (12%):</span>
+            <span>$${tax.toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
+          </div>
+          <div class="summary-row">
+            <span>Shipping:</span>
+            <span>${shipping === 0 ? 'FREE' : '$' + shipping.toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
+          </div>
+          <div class="summary-row total">
+            <span>Total:</span>
+            <span>$${total.toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
+          </div>
+        `;
+      }
+
+      function toggleBillingForm() {
+        const sameAsShip = document.getElementById('sameAsShip').checked;
+        document.getElementById('billingForm').style.display = sameAsShip ? 'none' : 'block';
+      }
+
+      function showError(message) {
+        document.getElementById('errorText').textContent = message;
+        document.getElementById('errorMessage').style.display = 'block';
+        window.scrollTo(0, 0);
+      }
+
+      function validateForm() {
+        const shipName = document.getElementById('shipName').value.trim();
+        const shipEmail = document.getElementById('shipEmail').value.trim();
+        const shipPhone = document.getElementById('shipPhone').value.trim();
+        const shipAddress = document.getElementById('shipAddress').value.trim();
+        const shipCity = document.getElementById('shipCity').value.trim();
+        const shipState = document.getElementById('shipState').value.trim();
+        const shipPostal = document.getElementById('shipPostal').value.trim();
+
+        if (!shipName) { showError('Please enter your full name'); return false; }
+        if (!shipEmail || !shipEmail.includes('@')) { showError('Please enter a valid email'); return false; }
+        if (!shipPhone) { showError('Please enter your phone number'); return false; }
+        if (!shipAddress) { showError('Please enter your address'); return false; }
+        if (!shipCity) { showError('Please enter your city'); return false; }
+        if (!shipState) { showError('Please enter your state/province'); return false; }
+        if (!shipPostal) { showError('Please enter your postal code'); return false; }
+
+        return true;
+      }
+
+      function createSwiftPaySignature(params, secretKey) {
+        const xParams = Object.keys(params)
+          .filter((key) => key.startsWith('x_'))
+          .sort((a, b) => a.localeCompare(b));
+        const message = xParams.map((key) => `${key}${params[key]}`).join('');
+        let hash = 'demo-signature';
+
+        try {
+          const cryptoObj = window.crypto || globalThis.crypto;
+          if (cryptoObj && cryptoObj.subtle && secretKey) {
+            const enc = new TextEncoder();
+            const keyBytes = enc.encode(secretKey);
+            const dataBytes = enc.encode(message);
+            return cryptoObj.subtle.importKey('raw', keyBytes, { name: 'HMAC', hash: 'SHA-256' }, false, ['sign'])
+              .then((key) => cryptoObj.subtle.sign('HMAC', key, dataBytes))
+              .then((buffer) => Array.from(new Uint8Array(buffer)).map((byte) => byte.toString(16).padStart(2, '0')).join(''));
+          }
+        } catch (error) {
+          console.warn('Unable to generate real HMAC in browser; using demo mode.', error);
+        }
+
+        return hash;
+      }
+
+      async function createSwiftPayCheckoutRedirect(orderData) {
+        const institution = selectedSwiftPayInstitution || swiftpayInstitutions[0];
+
+        try {
+          const payload = {
+            orderId: orderData.orderId,
+            amount: Number(orderData.amount).toFixed(2),
+            currency: 'PHP',
+            customerName: orderData.customerName,
+            customerEmail: orderData.customerEmail,
+            customerPhone: orderData.customerPhone,
+            institutionCode: institution.code,
+            paymentMethod: 'swiftpay',
+            items: orderData.items.map((item) => ({
+              name: item.name,
+              quantity: item.quantity,
+              amount: Number(item.price).toFixed(2)
+            }))
+          };
+
+          const response = await fetch('/api/swiftpay/create-order', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            if (data.checkoutUrl || data.customerRedirectUrl || data.redirect_url) {
+              return data.checkoutUrl || data.customerRedirectUrl || data.redirect_url;
+            }
+          }
+        } catch (error) {
+          console.warn('SwiftPay proxy endpoint not available; falling back to local redirect flow.', error);
+        }
+
+        return 'order-tracking.html?orderId=' + encodeURIComponent(orderData.orderId) + '&paymentMethod=swiftpay&institution=' + encodeURIComponent(institution.code);
+      }
+
+      async function handleCheckout(event) {
+        event.preventDefault();
+
+        if (!validateForm()) return;
+
+        const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+        const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        const tax = subtotal * 0.12;
+        const shipping = subtotal > 5000 ? 0 : 500;
+        const total = subtotal + tax + shipping;
+
+        const orderData = {
+          orderId: 'DRL-' + Date.now(),
+          customerId: Date.now().toString(),
+          customerName: document.getElementById('shipName').value,
+          customerEmail: document.getElementById('shipEmail').value,
+          customerPhone: document.getElementById('shipPhone').value,
+          shippingAddress: {
+            company: document.getElementById('shipCompany').value,
+            street: document.getElementById('shipAddress').value,
+            city: document.getElementById('shipCity').value,
+            state: document.getElementById('shipState').value,
+            postal: document.getElementById('shipPostal').value,
+            country: document.getElementById('shipCountry').value
+          },
+          items: cart,
+          amount: total,
+          currency: 'PHP',
+          paymentMethod: paymentMethod,
+          status: 'pending',
+          createdAt: new Date().toISOString(),
+          trackingId: 'TRACK-' + Math.random().toString(36).substr(2, 9).toUpperCase(),
+          selectedInstitution: selectedSwiftPayInstitution ? selectedSwiftPayInstitution.code : 'MAYA_WALLET'
+        };
+
+        if (paymentMethod === 'swiftpay') {
+          processSwiftPayPayment(orderData);
+        } else {
+          processBankTransfer(orderData);
+        }
+      }
+
+      async function processSwiftPayPayment(orderData) {
+        try {
+          const checkoutUrl = await createSwiftPayCheckoutRedirect(orderData);
+          orderData.status = 'awaiting_payment';
+          orderData.paymentMethod = 'swiftpay';
+          orderData.selectedInstitution = selectedSwiftPayInstitution ? selectedSwiftPayInstitution.code : 'MAYA_WALLET';
+          saveOrder(orderData);
+
+          if (checkoutUrl && checkoutUrl.startsWith('http')) {
+            window.location.href = checkoutUrl;
+            return;
+          }
+
+          document.getElementById('successMessage').style.display = 'block';
+          document.getElementById('successMessage').textContent = 'SwiftPay institution selected: ' + orderData.selectedInstitution + '. Redirecting to your payment flow...';
+          document.getElementById('checkoutForm').style.display = 'none';
+          setTimeout(() => {
+            window.location.href = checkoutUrl;
+          }, 1200);
+        } catch (error) {
+          showError('SwiftPay redirect failed. Please try again or choose another institution.');
+          console.error('SwiftPay error:', error);
+        }
+      }
+
+      function processBankTransfer(orderData) {
+        orderData.status = 'awaiting_payment';
+        orderData.paymentMethod = 'bank_transfer';
+        orderData.instructions = {
+          message: 'Please complete bank transfer and provide proof of payment',
+          bankDetails: {
+            bank: 'DRL Tech Bank',
+            account: '1234567890',
+            swift: 'DRLTPH01'
+          }
+        };
+
+        saveOrder(orderData);
+        showSuccessAndRedirect(orderData);
+      }
+
+      function saveOrder(orderData) {
+        let orders = JSON.parse(localStorage.getItem('drlOrders')) || [];
+        orders.push(orderData);
+        localStorage.setItem('drlOrders', JSON.stringify(orders));
+        localStorage.setItem('lastOrder', JSON.stringify(orderData));
+        localStorage.removeItem('drlCart');
+      }
+
+      function showSuccessAndRedirect(orderData) {
+        document.getElementById('successMessage').style.display = 'block';
+        document.getElementById('checkoutForm').style.display = 'none';
+
+        setTimeout(() => {
+          window.location.href = 'order-tracking.html?orderId=' + orderData.orderId;
+        }, 2000);
+      }
+
+      document.addEventListener('DOMContentLoaded', () => {
+        renderOrderSummary();
+        initializeSwiftPay();
+
+        document.querySelectorAll('input[name="paymentMethod"]').forEach((radio) => {
+          radio.addEventListener('change', (e) => {
+            const method = e.target.value;
+            document.getElementById('swiftpaySection').style.display = method === 'swiftpay' ? 'block' : 'none';
+            document.getElementById('bankTransferSection').style.display = method === 'bank_transfer' ? 'block' : 'none';
+            document.querySelectorAll('.payment-method').forEach((el) => el.classList.remove('selected'));
+            e.target.closest('.payment-method').classList.add('selected');
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

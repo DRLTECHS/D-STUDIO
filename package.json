@@ -1,0 +1,13 @@
+{
+  "name": "d-studio-swiftpay",
+  "version": "1.0.0",
+  "description": "DRL Techs storefront with SwiftPay backend API",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}

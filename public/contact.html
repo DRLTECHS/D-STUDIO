@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Contact Us - DRL Techs. Computer Software Trading">
+    <title>Contact Us — DRL Techs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+      :root { --ink:#121417; --paper:#f4f4f1; --muted:#888c93; --line:#2c3036; --accent:#e8c547; --panel:#191c20; }
+      * { box-sizing:border-box; }
+      html { scroll-behavior:smooth; }
+      body { background:var(--ink); color:var(--paper); font-family:Manrope,Arial,sans-serif; margin:0; }
+      body::before { background-image:linear-gradient(#ffffff06 1px,transparent 1px),linear-gradient(90deg,#ffffff06 1px,transparent 1px); background-size:48px 48px; content:""; inset:0; pointer-events:none; position:fixed; z-index:-1; }
+      a { color:inherit; }
+      button,input,textarea,select { font:inherit; }
+      .mono { font-family:"Space Mono",monospace; }
+      .frame { margin:auto; max-width:1440px; padding:0 60px; }
+      .eyebrow { align-items:center; color:var(--muted); display:flex; font:11px/1.4 "Space Mono",monospace; gap:12px; letter-spacing:.08em; text-transform:uppercase; }
+      .eyebrow::after { background:var(--line); content:""; height:1px; width:130px; }
+      .dot { background:var(--accent); border-radius:99px; box-shadow:0 0 12px #e8c547aa; display:inline-block; height:8px; width:8px; }
+      .button { align-items:center; background:var(--accent); border:1px solid var(--accent); color:#121417; cursor:pointer; display:inline-flex; font:700 11px "Space Mono",monospace; gap:10px; justify-content:center; letter-spacing:.08em; min-height:44px; padding:0 25px; text-decoration:none; text-transform:uppercase; transition:background .2s,color .2s; }
+      .button:hover { background:#f7d95b; }
+      .button:disabled { background:#666; cursor:not-allowed; opacity:.6; }
+      .button--secondary { background:transparent; border:1px solid var(--accent); color:var(--accent); }
+      .button--secondary:hover { background:var(--accent); color:var(--ink); }
+      header { align-items:center; display:flex; height:76px; justify-content:space-between; }
+      .brand { align-items:center; display:flex; gap:12px; text-decoration:none; }
+      .brand-mark { align-items:center; border:1px solid #5f5225; color:var(--accent); display:grid; font-size:15px; height:24px; place-items:center; transform:rotate(45deg); width:24px; }
+      .brand-mark span { transform:rotate(-45deg); }
+      .brand-name { font:800 20px "Space Mono",monospace; letter-spacing:.14em; }
+      .studio { border-left:1px solid var(--line); color:#70757c; font:11px "Space Mono",monospace; letter-spacing:.06em; padding-left:12px; }
+      .brand-copy { align-items:center; display:flex; gap:14px; }
+      nav { display:flex; gap:32px; }
+      nav a { color:#a8adb4; font:11px "Space Mono",monospace; letter-spacing:.08em; text-decoration:none; text-transform:uppercase; }
+      nav a:hover { color:var(--accent); }
+      h1 { font-size:clamp(35px,4vw,58px); letter-spacing:-.065em; line-height:1; margin:36px 0 24px; }
+      h2 { font-size:20px; letter-spacing:-.05em; margin:32px 0 16px; font-weight:700; }
+      h3 { font-size:16px; letter-spacing:-.04em; margin:24px 0 12px; font-weight:600; }
+      p { color:#a8adb4; font:13px/1.75 "Space Mono",monospace; margin:0 0 16px; line-height:1.7; }
+      ul, ol { color:#a8adb4; font:13px/1.75 "Space Mono",monospace; margin:0 0 16px; padding-left:24px; }
+      li { margin-bottom:8px; }
+      .content { padding:80px 0; }
+      .section { margin-bottom:48px; }
+      .form-section { background:var(--panel); border:1px solid var(--line); padding:32px; margin:32px 0; }
+      .form-group { margin-bottom:24px; }
+      .form-group label { display:block; margin-bottom:8px; color:var(--paper); font:11px "Space Mono",monospace; text-transform:uppercase; letter-spacing:.06em; }
+      .form-group input,
+      .form-group textarea,
+      .form-group select { width:100%; padding:12px; background:var(--ink); border:1px solid var(--line); color:var(--paper); font:13px "Space Mono",monospace; }
+      .form-group input:focus,
+      .form-group textarea:focus,
+      .form-group select:focus { outline:none; border-color:var(--accent); box-shadow:0 0 8px rgba(232,197,71,.2); }
+      .form-group textarea { min-height:120px; resize:vertical; }
+      .nda-check { background:var(--ink); border:2px solid var(--line); padding:24px; margin:32px 0; border-radius:4px; }
+      .nda-check.completed { border-color:var(--accent); background:rgba(232,197,71,.05); }
+      .nda-status { display:flex; align-items:center; gap:12px; margin-bottom:16px; }
+      .status-icon { width:24px; height:24px; display:flex; align-items:center; justify-content:center; border-radius:50%; font-size:14px; }
+      .status-icon.pending { background:var(--line); color:var(--muted); }
+      .status-icon.completed { background:var(--accent); color:var(--ink); }
+      .status-text { flex:1; }
+      .status-text strong { display:block; color:var(--paper); }
+      .status-text span { color:#858a92; font:11px "Space Mono",monospace; }
+      .nda-button { display:inline-block; margin-top:12px; }
+      .success-message { background:var(--panel); border-left:4px solid var(--accent); padding:16px; margin:16px 0; color:var(--paper); }
+      .warning-message { background:var(--panel); border-left:4px solid:#ffa500; padding:16px; margin:16px 0; color:#ffd700; }
+      .error-message { background:var(--panel); border-left:4px solid:#ff6b6b; padding:16px; margin:16px 0; color:#ff9999; }
+      .contact-info { display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:32px; margin:32px 0; }
+      .info-block { background:var(--panel); border:1px solid var(--line); padding:24px; }
+      .info-block h3 { margin-top:0; }
+      .info-block p { margin:8px 0; color:#a8adb4; }
+      .divider { height:1px; background:var(--line); margin:32px 0; }
+      footer { border-top:1px solid var(--line); padding:32px 0; margin-top:80px; }
+      .footer-row { align-items:center; color:#7f848b; display:flex; font:10px "Space Mono",monospace; justify-content:space-between; text-transform:uppercase; gap:32px; flex-wrap:wrap; }
+      .footer-links { display:flex; gap:22px; }
+      .footer-links a { text-decoration:none; }
+      @media (max-width:800px) { .frame { padding:0 20px; } header { height:70px; } nav,.studio { display:none; } h1 { font-size:clamp(28px,10vw,42px); margin:24px 0 16px; } .content { padding:40px 0; } .form-section { padding:16px; } .contact-info { grid-template-columns:1fr; } }
+    </style>
+  </head>
+  <body>
+    <div class="frame">
+      <header>
+        <a class="brand" href="/" aria-label="DRL Techs home"><span class="brand-mark"><span>✦</span></span><span class="brand-copy"><strong class="brand-name">DRL TECHS</strong><span class="studio">// Software Trading</span></span></a>
+        <nav aria-label="Main navigation"><a href="/">Home</a><a href="/privacy.html">Privacy</a><a href="/terms.html">Terms</a></nav>
+      </header>
+
+      <main class="content">
+        <h1>Contact Us</h1>
+        <p class="eyebrow"><span class="dot"></span>Get in Touch with DRL Techs</p>
+
+        <div class="section">
+          <h2>We'd Love to Hear From You</h2>
+          <p>To inquire about our services, please complete the form below. All customer inquiries require signing our Non-Disclosure Agreement to protect both parties and maintain confidentiality of shared information.</p>
+        </div>
+
+        <!-- Contact Information -->
+        <div class="contact-info">
+          <div class="info-block">
+            <h3>📍 Address</h3>
+            <p>Brgy. Bulilan Norte<br>Pila Laguna<br>Philippines 4010</p>
+          </div>
+          <div class="info-block">
+            <h3>📞 Phone</h3>
+            <p>09103350434</p>
+            <p style="font:11px 'Space Mono',monospace; color:#858a92;">Available Monday - Friday<br>9:00 AM - 6:00 PM PHT</p>
+          </div>
+          <div class="info-block">
+            <h3>📧 Email</h3>
+            <p><strong>admin@drl-softechs.dev</strong></p>
+            <p style="font:11px 'Space Mono',monospace; color:#858a92;">Response within 24 hours</p>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- NDA Requirement -->
+        <div class="form-section">
+          <h2>Step 1: Sign the Non-Disclosure Agreement</h2>
+          <p>Before submitting your inquiry, we require all customers to review and sign our Non-Disclosure Agreement. This ensures the confidentiality and security of the information you share with us.</p>
+
+          <div class="nda-check" id="ndaStatusBox">
+            <div class="nda-status">
+              <div class="status-icon pending" id="ndaStatusIcon">↗</div>
+              <div class="status-text">
+                <strong>NDA Status: Not Signed</strong>
+                <span>Complete the NDA signing to proceed with your inquiry</span>
+              </div>
+            </div>
+            <a href="/ndf-agreement.html" target="_blank" class="button nda-button">Sign NDA Agreement</a>
+          </div>
+
+          <div class="warning-message" id="ndaWarning">
+            ⚠️ You must complete and sign the NDA before submitting your inquiry. Please click the button above to review and sign the agreement.
+          </div>
+        </div>
+
+        <!-- Contact Form -->
+        <div class="form-section">
+          <h2>Step 2: Submit Your Inquiry</h2>
+          <p>Please provide details about your inquiry. All information is kept confidential in accordance with our Privacy Policy.</p>
+
+          <div class="form-group">
+            <label>Full Name *</label>
+            <input type="text" id="contactName" placeholder="Enter your full name" required>
+          </div>
+
+          <div class="form-group">
+            <label>Company Name *</label>
+            <input type="text" id="contactCompany" placeholder="Enter your company name" required>
+          </div>
+
+          <div class="form-group">
+            <label>Email Address *</label>
+            <input type="email" id="contactEmail" placeholder="Enter your email address" required>
+          </div>
+
+          <div class="form-group">
+            <label>Phone Number</label>
+            <input type="tel" id="contactPhone" placeholder="Enter your phone number">
+          </div>
+
+          <div class="form-group">
+            <label>Subject *</label>
+            <select id="contactSubject" required>
+              <option value="">Select a subject...</option>
+              <option value="software-development">Software Development Services</option>
+              <option value="consulting">Business Consulting</option>
+              <option value="support">Technical Support</option>
+              <option value="partnership">Partnership Inquiry</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Message *</label>
+            <textarea id="contactMessage" placeholder="Please describe your inquiry in detail..." required></textarea>
+          </div>
+
+          <div class="form-group" style="margin-bottom:0;">
+            <label style="display:flex; align-items:flex-start; gap:12px; cursor:pointer;">
+              <input type="checkbox" id="ndaConfirm" style="width:auto; margin-top:4px;"> 
+              <span>I confirm that I have read, understood, and signed the Non-Disclosure Agreement with DRL Techs.</span>
+            </label>
+          </div>
+
+          <div style="display:flex; gap:12px; margin-top:24px;">
+            <button class="button" onclick="submitInquiry()" id="submitBtn" disabled>Submit Inquiry</button>
+            <button class="button button--secondary" onclick="resetContactForm()">Reset Form</button>
+          </div>
+        </div>
+
+        <!-- Success Message (Hidden) -->
+        <div id="successMessage" style="display:none;" class="success-message">
+          ✅ Thank you for your inquiry! We have received your message and will review it shortly. Our team will contact you within 24 hours to discuss your needs further. Please keep your NDA signed copy for your records.
+        </div>
+
+        <!-- Error Message (Hidden) -->
+        <div id="errorMessage" style="display:none;" class="error-message">
+          ⚠️ <span id="errorText"></span>
+        </div>
+      </main>
+
+      <footer>
+        <div class="footer-row">
+          <div>
+            <a class="brand" href="/"><span class="brand-mark"><span>✦</span></span><strong class="brand-name" style="font-size:14px;">DRL TECHS</strong></a>
+            <p style="color:#7f848b;font:10px 'Space Mono',monospace;margin:8px 0 0;">Brgy. Bulilan Norte Pila Laguna Philippines 4010</p>
+          </div>
+          <div class="footer-links">
+            <a href="/">Home</a>
+            <a href="/ndf-agreement.html">NDF Agreement</a>
+            <a href="/privacy.html">Privacy</a>
+            <a href="/terms.html">Terms</a>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script>
+      // Check if NDA has been signed (using sessionStorage for this session)
+      function checkNDAStatus() {
+        const ndaSigned = sessionStorage.getItem('ndaSigned') === 'true';
+        const ndaStatusBox = document.getElementById('ndaStatusBox');
+        const ndaWarning = document.getElementById('ndaWarning');
+        const ndaConfirm = document.getElementById('ndaConfirm');
+        const submitBtn = document.getElementById('submitBtn');
+        const ndaStatusIcon = document.getElementById('ndaStatusIcon');
+
+        if (ndaSigned) {
+          ndaStatusBox.classList.add('completed');
+          ndaStatusIcon.classList.remove('pending');
+          ndaStatusIcon.classList.add('completed');
+          ndaStatusIcon.textContent = '✓';
+          ndaStatusBox.innerHTML = `
+            <div class="nda-status">
+              <div class="status-icon completed">✓</div>
+              <div class="status-text">
+                <strong>NDA Status: Signed ✓</strong>
+                <span>You can now proceed with your inquiry</span>
+              </div>
+            </div>
+          `;
+          ndaWarning.style.display = 'none';
+          ndaConfirm.checked = true;
+          updateSubmitButton();
+        }
+      }
+
+      // Listen for NDA completion from other window
+      window.addEventListener('storage', (e) => {
+        if (e.key === 'ndaSigned') {
+          checkNDAStatus();
+        }
+      });
+
+      // Check NDA status on page load
+      window.addEventListener('load', checkNDAStatus);
+
+      // Mark NDA as signed when user checks the confirmation
+      document.getElementById('ndaConfirm').addEventListener('change', updateSubmitButton);
+
+      function updateSubmitButton() {
+        const ndaSigned = sessionStorage.getItem('ndaSigned') === 'true';
+        const ndaConfirm = document.getElementById('ndaConfirm').checked;
+        const submitBtn = document.getElementById('submitBtn');
+
+        if (ndaSigned && ndaConfirm) {
+          submitBtn.disabled = false;
+        } else {
+          submitBtn.disabled = true;
+        }
+      }
+
+      // Handle window messages from NDA page
+      window.addEventListener('message', (event) => {
+        if (event.data.type === 'ndaSigned') {
+          sessionStorage.setItem('ndaSigned', 'true');
+          checkNDAStatus();
+        }
+      });
+
+      function validateForm() {
+        const name = document.getElementById('contactName').value.trim();
+        const company = document.getElementById('contactCompany').value.trim();
+        const email = document.getElementById('contactEmail').value.trim();
+        const subject = document.getElementById('contactSubject').value;
+        const message = document.getElementById('contactMessage').value.trim();
+        const ndaConfirm = document.getElementById('ndaConfirm').checked;
+        const ndaSigned = sessionStorage.getItem('ndaSigned') === 'true';
+
+        if (!name) {
+          showError('Please enter your full name');
+          return false;
+        }
+        if (!company) {
+          showError('Please enter your company name');
+          return false;
+        }
+        if (!email || !email.includes('@')) {
+          showError('Please enter a valid email address');
+          return false;
+        }
+        if (!subject) {
+          showError('Please select a subject for your inquiry');
+          return false;
+        }
+        if (!message) {
+          showError('Please provide details about your inquiry');
+          return false;
+        }
+        if (!ndaSigned) {
+          showError('You must sign the NDA before submitting your inquiry');
+          return false;
+        }
+        if (!ndaConfirm) {
+          showError('Please confirm that you have signed the NDA');
+          return false;
+        }
+
+        return true;
+      }
+
+      function showError(message) {
+        document.getElementById('errorText').textContent = message;
+        document.getElementById('errorMessage').style.display = 'block';
+        document.getElementById('successMessage').style.display = 'none';
+        window.scrollTo(0, document.getElementById('errorMessage').offsetTop - 100);
+      }
+
+      function showSuccess() {
+        document.getElementById('successMessage').style.display = 'block';
+        document.getElementById('errorMessage').style.display = 'none';
+        window.scrollTo(0, document.getElementById('successMessage').offsetTop - 100);
+      }
+
+      function submitInquiry() {
+        if (!validateForm()) {
+          return;
+        }
+
+        const name = document.getElementById('contactName').value.trim();
+        const company = document.getElementById('contactCompany').value.trim();
+        const email = document.getElementById('contactEmail').value.trim();
+        const phone = document.getElementById('contactPhone').value.trim();
+        const subject = document.getElementById('contactSubject').value;
+        const message = document.getElementById('contactMessage').value.trim();
+        const timestamp = new Date().toISOString();
+
+        // Store inquiry data (in real implementation, this would be sent to a backend)
+        const inquiryData = {
+          name,
+          company,
+          email,
+          phone,
+          subject,
+          message,
+          timestamp,
+          ndaSigned: true
+        };
+
+        console.log('Inquiry submitted:', inquiryData);
+
+        // Show success message
+        showSuccess();
+
+        // Reset form after 2 seconds
+        setTimeout(() => {
+          resetContactForm();
+        }, 2000);
+      }
+
+      function resetContactForm() {
+        document.getElementById('contactName').value = '';
+        document.getElementById('contactCompany').value = '';
+        document.getElementById('contactEmail').value = '';
+        document.getElementById('contactPhone').value = '';
+        document.getElementById('contactSubject').value = '';
+        document.getElementById('contactMessage').value = '';
+        document.getElementById('errorMessage').style.display = 'none';
+        document.getElementById('successMessage').style.display = 'none';
+      }
+
+      // Set up NDA signing link to mark as signed
+      document.addEventListener('DOMContentLoaded', () => {
+        const ndaLink = document.querySelector('a[href="/ndf-agreement.html"]');
+        if (ndaLink) {
+          ndaLink.addEventListener('click', () => {
+            // This will be handled by post-message from NDA page
+            sessionStorage.setItem('ndaWindowOpened', 'true');
+          });
+        }
+      });
+    </script>
+  </body>
+</html>

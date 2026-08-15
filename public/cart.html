@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Shopping Cart - DRL Techs">
+    <title>Shopping Cart — DRL Techs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+      :root { --ink:#121417; --paper:#f4f4f1; --muted:#888c93; --line:#2c3036; --accent:#e8c547; --panel:#191c20; }
+      * { box-sizing:border-box; }
+      html { scroll-behavior:smooth; }
+      body { background:var(--ink); color:var(--paper); font-family:Manrope,Arial,sans-serif; margin:0; }
+      body::before { background-image:linear-gradient(#ffffff06 1px,transparent 1px),linear-gradient(90deg,#ffffff06 1px,transparent 1px); background-size:48px 48px; content:""; inset:0; pointer-events:none; position:fixed; z-index:-1; }
+      a { color:inherit; }
+      button,input { font:inherit; }
+      .mono { font-family:"Space Mono",monospace; }
+      .frame { margin:auto; max-width:1440px; padding:0 60px; }
+      .eyebrow { align-items:center; color:var(--muted); display:flex; font:11px/1.4 "Space Mono",monospace; gap:12px; letter-spacing:.08em; text-transform:uppercase; }
+      .eyebrow::after { background:var(--line); content:""; height:1px; width:130px; }
+      .dot { background:var(--accent); border-radius:99px; box-shadow:0 0 12px #e8c547aa; display:inline-block; height:8px; width:8px; }
+      .button { align-items:center; background:var(--accent); border:1px solid var(--accent); color:#121417; cursor:pointer; display:inline-flex; font:700 11px "Space Mono",monospace; gap:10px; justify-content:center; letter-spacing:.08em; min-height:44px; padding:0 25px; text-decoration:none; text-transform:uppercase; transition:background .2s,color .2s; }
+      .button:hover { background:#f7d95b; }
+      .button--secondary { background:transparent; border:1px solid var(--accent); color:var(--accent); }
+      .button--secondary:hover { background:var(--accent); color:var(--ink); }
+      .button--danger { background:#ff6b6b; border-color:#ff6b6b; }
+      .button--danger:hover { background:#ff5252; }
+      header { align-items:center; display:flex; height:76px; justify-content:space-between; }
+      .brand { align-items:center; display:flex; gap:12px; text-decoration:none; }
+      .brand-mark { align-items:center; border:1px solid #5f5225; color:var(--accent); display:grid; font-size:15px; height:24px; place-items:center; transform:rotate(45deg); width:24px; }
+      .brand-mark span { transform:rotate(-45deg); }
+      .brand-name { font:800 20px "Space Mono",monospace; letter-spacing:.14em; }
+      .studio { border-left:1px solid var(--line); color:#70757c; font:11px "Space Mono",monospace; letter-spacing:.06em; padding-left:12px; }
+      .brand-copy { align-items:center; display:flex; gap:14px; }
+      nav { display:flex; gap:32px; align-items:center; }
+      nav a { color:#a8adb4; font:11px "Space Mono",monospace; letter-spacing:.08em; text-decoration:none; text-transform:uppercase; }
+      nav a:hover { color:var(--accent); }
+      .cart-badge { background:var(--accent); color:var(--ink); font:700 9px "Space Mono",monospace; padding:4px 8px; border-radius:2px; margin-left:4px; }
+      h1 { font-size:clamp(35px,4vw,58px); letter-spacing:-.065em; line-height:1; margin:36px 0 24px; }
+      h2 { font-size:20px; letter-spacing:-.05em; margin:32px 0 16px; font-weight:700; }
+      p { color:#a8adb4; font:13px/1.75 "Space Mono",monospace; margin:0 0 16px; line-height:1.7; }
+      .content { padding:80px 0; }
+      .cart-layout { display:grid; grid-template-columns:2fr 1fr; gap:48px; margin:32px 0; }
+      .cart-items { background:var(--panel); border:1px solid var(--line); }
+      .cart-item { border-bottom:1px solid var(--line); padding:24px; display:flex; justify-content:space-between; align-items:center; gap:20px; }
+      .cart-item:last-child { border-bottom:none; }
+      .item-info { flex:1; }
+      .item-name { font:600 16px Manrope; }
+      .item-meta { color:#858a92; font:11px "Space Mono",monospace; margin-top:8px; }
+      .item-price { font:700 14px "Space Mono",monospace; color:var(--accent); }
+      .item-controls { display:flex; align-items:center; gap:8px; }
+      .item-controls input { width:50px; padding:6px; background:var(--ink); border:1px solid var(--line); color:var(--paper); font:11px "Space Mono",monospace; }
+      .item-total { font:700 14px "Space Mono",monospace; min-width:120px; text-align:right; }
+      .order-summary { background:var(--panel); border:1px solid var(--line); padding:24px; height:fit-content; position:sticky; top:100px; }
+      .summary-row { display:flex; justify-content:space-between; margin:12px 0; font:13px "Space Mono",monospace; }
+      .summary-row.total { border-top:1px solid var(--line); padding-top:12px; font-weight:700; font-size:16px; }
+      .empty-cart { text-align:center; padding:60px 20px; }
+      .empty-icon { font-size:48px; margin-bottom:16px; }
+      footer { border-top:1px solid var(--line); padding:32px 0; margin-top:80px; }
+      .footer-row { align-items:center; color:#7f848b; display:flex; font:10px "Space Mono",monospace; justify-content:space-between; text-transform:uppercase; gap:32px; flex-wrap:wrap; }
+      .footer-links { display:flex; gap:22px; }
+      .footer-links a { text-decoration:none; }
+      @media (max-width:800px) { .frame { padding:0 20px; } header { height:70px; } nav,.studio { display:none; } h1 { font-size:clamp(28px,10vw,42px); margin:24px 0 16px; } .content { padding:40px 0; } .cart-layout { grid-template-columns:1fr; } .order-summary { position:static; } .cart-item { flex-direction:column; align-items:flex-start; } .item-total { width:100%; text-align:left; margin-top:12px; } }
+    </style>
+  </head>
+  <body>
+    <div class="frame">
+      <header>
+        <a class="brand" href="/" aria-label="DRL Techs home"><span class="brand-mark"><span>✦</span></span><span class="brand-copy"><strong class="brand-name">DRL TECHS</strong><span class="studio">// Software Trading</span></span></a>
+        <nav aria-label="Main navigation">
+          <a href="/">Home</a>
+          <a href="products.html">Products</a>
+          <a href="contact.html">Contact</a>
+          <a href="cart.html">Cart <span class="cart-badge" id="cartCount">0</span></a>
+        </nav>
+      </header>
+
+      <main class="content">
+        <h1>Shopping Cart</h1>
+        <p class="eyebrow"><span class="dot"></span>Review Your Order</p>
+
+        <div id="cartContent"></div>
+      </main>
+
+      <footer>
+        <div class="footer-row">
+          <div>
+            <a class="brand" href="/"><span class="brand-mark"><span>✦</span></span><strong class="brand-name" style="font-size:14px;">DRL TECHS</strong></a>
+            <p style="color:#7f848b;font:10px 'Space Mono',monospace;margin:8px 0 0;">Brgy. Bulilan Norte Pila Laguna Philippines 4010</p>
+          </div>
+          <div class="footer-links">
+            <a href="/">Home</a>
+            <a href="products.html">Products</a>
+            <a href="contact.html">Contact</a>
+            <a href="ndf-agreement.html">NDA</a>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script>
+      let cart = JSON.parse(localStorage.getItem('drlCart')) || [];
+
+      function renderCart() {
+        const container = document.getElementById('cartContent');
+        
+        if (cart.length === 0) {
+          container.innerHTML = `
+            <div class="empty-cart">
+              <div class="empty-icon">🛒</div>
+              <h2>Your Cart is Empty</h2>
+              <p>No items in your cart yet</p>
+              <a href="products.html" class="button" style="margin-top:24px;">Browse Products</a>
+            </div>
+          `;
+          return;
+        }
+
+        const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        const tax = subtotal * 0.12;
+        const shipping = subtotal > 5000 ? 0 : 500;
+        const total = subtotal + tax + shipping;
+
+        container.innerHTML = `
+          <div class="cart-layout">
+            <div class="cart-items" id="cartItemsList"></div>
+            <div class="order-summary">
+              <h2 style="margin-top:0;">Order Summary</h2>
+              <div class="summary-row">
+                <span>Subtotal:</span>
+                <span>$${subtotal.toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
+              </div>
+              <div class="summary-row">
+                <span>Tax (12%):</span>
+                <span>$${tax.toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
+              </div>
+              <div class="summary-row">
+                <span>Shipping:</span>
+                <span>${shipping === 0 ? 'FREE' : '$' + shipping.toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
+              </div>
+              <div class="summary-row total">
+                <span>Total:</span>
+                <span>$${total.toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
+              </div>
+              <button class="button" onclick="proceedToCheckout()" style="width:100%; margin-top:24px;">Proceed to Checkout</button>
+              <a href="products.html" class="button button--secondary" style="width:100%; margin-top:12px; text-align:center;">Continue Shopping</a>
+            </div>
+          </div>
+        `;
+
+        const itemsList = document.getElementById('cartItemsList');
+        itemsList.innerHTML = cart.map((item, index) => {
+          const itemTotal = item.price * item.quantity;
+          return `
+            <div class="cart-item">
+              <div class="item-info">
+                <div class="item-name">${item.name}</div>
+                <div class="item-meta">Category: ${item.category} | Price: $${item.price.toLocaleString()}</div>
+              </div>
+              <div class="item-controls">
+                <label style="font:11px 'Space Mono',monospace;">Qty:</label>
+                <input type="number" min="1" value="${item.quantity}" onchange="updateQuantity(${index}, this.value)">
+              </div>
+              <div class="item-total">$${itemTotal.toLocaleString('en-US', { minimumFractionDigits: 2 })}</div>
+              <button class="button button--danger" onclick="removeFromCart(${index})" style="padding:0 12px;">Remove</button>
+            </div>
+          `;
+        }).join('');
+
+        updateCartCount();
+      }
+
+      function updateQuantity(index, newQty) {
+        const qty = parseInt(newQty) || 1;
+        if (qty < 1) {
+          removeFromCart(index);
+          return;
+        }
+        cart[index].quantity = qty;
+        localStorage.setItem('drlCart', JSON.stringify(cart));
+        renderCart();
+      }
+
+      function removeFromCart(index) {
+        cart.splice(index, 1);
+        localStorage.setItem('drlCart', JSON.stringify(cart));
+        renderCart();
+      }
+
+      function updateCartCount() {
+        const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+        document.getElementById('cartCount').textContent = count;
+      }
+
+      function proceedToCheckout() {
+        window.location.href = 'checkout.html';
+      }
+
+      renderCart();
+    </script>
+  </body>
+</html>
