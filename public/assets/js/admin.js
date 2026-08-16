@@ -1,6 +1,8 @@
 // Admin Dashboard JavaScript
 
 (() => {
+  const appConfig = window.__APP_CONFIG__ || {};
+
   // State
   let isLoggedIn = false;
   let adminPassword = 'admin123';
@@ -245,7 +247,7 @@
     const hidden = display.classList.contains('masked');
     
     if (hidden) {
-      display.textContent = process.env.SWIFTPAY_API_KEY || '••••••••••••••••';
+      display.textContent = appConfig.swiftpayApiKey || '••••••••••••••••';
       display.classList.remove('masked');
       this.textContent = 'Hide';
     } else {
@@ -260,7 +262,7 @@
     const hidden = display.classList.contains('masked');
     
     if (hidden) {
-      display.textContent = process.env.SWIFTPAY_API_SECRET || '••••••••••••••••';
+      display.textContent = appConfig.swiftpayApiSecret || '••••••••••••••••';
       display.classList.remove('masked');
       this.textContent = 'Hide';
     } else {
@@ -691,9 +693,9 @@
   // Load system info on settings tab
   document.addEventListener('click', (e) => {
     if (e.target.dataset.tab === 'settings') {
-      document.getElementById('envDisplay').textContent = process.env.NODE_ENV || 'development';
-      document.getElementById('baseUrlDisplay').textContent = window.location.origin;
-      document.getElementById('modeDisplay').textContent = 'SwiftPay Mode Configured';
+      document.getElementById('envDisplay').textContent = appConfig.env || 'development';
+      document.getElementById('baseUrlDisplay').textContent = appConfig.baseUrl || window.location.origin;
+      document.getElementById('modeDisplay').textContent = appConfig.swiftpayMode ? `SwiftPay Mode: ${appConfig.swiftpayMode}` : 'SwiftPay Mode Configured';
     }
   });
 
