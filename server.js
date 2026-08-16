@@ -230,6 +230,286 @@ app.post('/api/swiftpay/create-order', async (req, res) => {
   }
 });
 
+// Admin API Endpoints
+app.get('/api/admin/system', (req, res) => {
+  res.json({
+    status: 'online',
+    environment: process.env.NODE_ENV || 'development',
+    swiftpayMode: process.env.SWIFTPAY_MODE || 'sandbox',
+    uptime: process.uptime(),
+    timestamp: new Date().toISOString()
+  });
+});
+
+app.get('/api/admin/orders', (req, res) => {
+  // In production, this would fetch from a database
+  // For now, return structured response for admin dashboard
+  res.json({
+    orders: [
+      { orderId: 'DRL-001', customerName: 'Demo Customer', amount: 5000, currency: 'PHP', status: 'completed', timestamp: Date.now() - 86400000 },
+      { orderId: 'DRL-002', customerName: 'Test User', amount: 3500, currency: 'PHP', status: 'pending', timestamp: Date.now() - 43200000 }
+    ],
+    count: 2
+  });
+});
+
+app.get('/api/admin/webhooks', (req, res) => {
+  // Return webhook logs for admin dashboard
+  res.json({
+    webhooks: [
+      { orderId: 'DRL-001', success: true, status: 'completed', timestamp: Date.now() - 86400000 },
+      { orderId: 'DRL-002', success: true, status: 'pending', timestamp: Date.now() - 43200000 }
+    ],
+    count: 2
+  });
+});
+
+app.post('/api/admin/webhook-test', (req, res) => {
+  // Test webhook endpoint
+  console.log('Admin webhook test triggered');
+  res.json({ ok: true, message: 'Webhook test sent successfully' });
+});
+
+// AI Content Generation Endpoint
+app.post('/api/admin/generate-content', (req, res) => {
+  try {
+    const {
+      platform,
+      contentType,
+      productName,
+      keywords,
+      tone,
+      targetAudience,
+      cta
+    } = req.body;
+
+    // Template-based content generation (can be replaced with OpenAI/Claude API)
+    const templates = {
+      product: [
+        `🚀 Introducing ${productName}!\n\nTransform your ${targetAudience} experience with our cutting-edge solution. ${keywords}.\n\n✨ Features:\n• Innovative design\n• Secure & Reliable\n• Easy to use\n\n${cta ? `👉 ${cta}` : 'Learn more today!'}`,
+        `Meet ${productName} - The perfect solution for ${targetAudience}.\n\n${keywords}\n\nWhy choose us?\n✓ Trusted by thousands\n✓ 24/7 Support\n✓ Best value guaranteed\n\n${cta || 'Get started now!'}`,
+      ],
+      promotion: [
+        `⏰ Limited Time Offer! ⏰\n\n${productName} is now available at an unbeatable price!\n\n🎁 Exclusive benefits:\n${keywords}\n\n🔥 Don't miss out! ${cta || 'Grab yours today!'}\n\n*Offer valid this month*`,
+      ],
+      announcement: [
+        `📢 Big News! 📢\n\n${productName} is here!\n\nWe're excited to announce our newest innovative solution.\n\nKey highlights:\n${keywords}\n\nPerfect for: ${targetAudience}\n\n${cta || 'Learn more'}`,
+      ],
+      testimonial: [
+        `⭐⭐⭐⭐⭐\n\n"${productName} has been a game-changer for us!"\n\n${targetAudience} across the industry are loving these ${keywords}.\n\n✅ Results speak for themselves\n✅ Trusted by leading companies\n\n${cta || 'Join satisfied customers'}`,
+      ],
+      educational: [
+        `📚 Did You Know? 📚\n\nLearn how ${productName} can help your ${targetAudience}:\n\n1️⃣ ${keywords}\n2️⃣ Better outcomes\n3️⃣ Maximum productivity\n\n🎓 Master these skills with ${productName}\n\n${cta || 'Get your free guide'}`,
+      ],
+      engagement: [
+        `🤔 Quick Question!\n\nWhich matters most to you?\n${keywords}\n\nTell us in the comments! 👇\n\n${cta || 'Join the conversation'}`,
+      ]
+    };
+
+    const typeTemplates = templates[contentType] || templates.product;
+    const content = typeTemplates[Math.floor(Math.random() * typeTemplates.length)];
+
+    res.json({
+      ok: true,
+      content,
+      platform,
+      contentType,
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('Content generation error:', error);
+    res.status(500).json({
+      ok: false,
+      error: 'Failed to generate content',
+      details: error.message
+    });
+  }
+});
+
+// Social Media Publishing Endpoint
+app.post('/api/admin/publish-social', (req, res) => {
+  try {
+    const {
+      content,
+      platform,
+      scheduledTime,
+      addHashtags
+    } = req.body;
+
+    if (!content || !platform) {
+      return res.status(400).json({
+        ok: false,
+        error: 'Missing content or platform'
+      });
+    }
+
+    // Add hashtags if requested
+    let finalContent = content;
+    if (addHashtags) {
+      const hashtags = '\n\n#DRLTechs #Innovation #SoftwareTrading #BusinessSolutions';
+      finalContent += hashtags;
+    }
+
+    // Mock social media publishing
+    // In production, this would integrate with:
+    // - Facebook Graph API
+    // - Instagram Graph API
+    // - Twitter API v2
+    // - LinkedIn API
+    // - TikTok API
+    
+    console.log(`[PUBLISH] Platform: ${platform}, Scheduled: ${scheduledTime ? 'Yes' : 'Immediately'}`);
+    console.log(`[CONTENT] ${finalContent.substring(0, 100)}...`);
+
+    res.json({
+      ok: true,
+      message: `Content queued for ${platform}`,
+      platform,
+      status: scheduledTime ? 'scheduled' : 'published',
+      scheduledTime: scheduledTime || null,
+      timestamp: new Date().toISOString(),
+      contentLength: finalContent.length,
+      postId: `post-${Date.now()}`
+    });
+  } catch (error) {
+    console.error('Publish error:', error);
+    res.status(500).json({
+      ok: false,
+      error: 'Failed to publish content',
+      details: error.message
+    });
+  }
+});
+
+// ============ IMAGE GENERATION ENDPOINT ============
+app.post('/api/admin/generate-image', express.json(), async (req, res) => {
+  try {
+    const { model, imageType, style, prompt, size, quality } = req.body;
+
+    if (!model || !imageType || !style || !prompt) {
+      return res.status(400).json({
+        ok: false,
+        error: 'Missing required fields'
+      });
+    }
+
+    // Mock implementation
+    // In production, integrate with:
+    // - OpenAI DALL-E 3 API
+    // - Midjourney API
+    // - Stability AI (Stable Diffusion)
+    // - Adobe Firefly API
+    
+    console.log(`[IMAGE_GEN] Model: ${model}, Type: ${imageType}, Style: ${style}`);
+    console.log(`[IMAGE_PROMPT] ${prompt.substring(0, 100)}...`);
+
+    // Simulate processing
+    const sizeMap = {
+      'square': '1024x1024',
+      'portrait': '1024x1792',
+      'landscape': '1792x1024',
+      'social': '1200x630',
+      '4k': '3840x2160'
+    };
+
+    // In demo mode, return placeholder
+    // In production, call actual AI image generation API
+    const imageUrl = `https://via.placeholder.com/${sizeMap[size] || '1024x1024'}/3498db/ffffff?text=${encodeURIComponent(imageType)}+${encodeURIComponent(style)}`;
+
+    res.json({
+      ok: true,
+      imageUrl,
+      model,
+      imageType,
+      style,
+      size: sizeMap[size],
+      quality,
+      timestamp: new Date().toISOString(),
+      processingTime: Math.floor(Math.random() * 30) + 10 + 's',
+      message: 'Demo mode: Using placeholder. For production, connect to DALL-E, Midjourney, or Stable Diffusion API'
+    });
+  } catch (error) {
+    console.error('Image generation error:', error);
+    res.status(500).json({
+      ok: false,
+      error: 'Failed to generate image',
+      details: error.message
+    });
+  }
+});
+
+// ============ VIDEO GENERATION ENDPOINT ============
+app.post('/api/admin/generate-video', express.json(), async (req, res) => {
+  try {
+    const {
+      model,
+      videoType,
+      duration,
+      script,
+      style,
+      voice,
+      aspect,
+      includeMusic,
+      includeSubtitles
+    } = req.body;
+
+    if (!model || !videoType || !duration || !script) {
+      return res.status(400).json({
+        ok: false,
+        error: 'Missing required fields'
+      });
+    }
+
+    // Mock implementation
+    // In production, integrate with:
+    // - Runway ML API
+    // - Synthesia AI
+    // - Descript API
+    // - ElevenLabs Video API
+    // - HeyGen API
+    
+    console.log(`[VIDEO_GEN] Model: ${model}, Type: ${videoType}, Duration: ${duration}s, Style: ${style}`);
+    console.log(`[VIDEO_SCRIPT] ${script.substring(0, 100)}...`);
+    console.log(`[VIDEO_SETTINGS] Voice: ${voice}, Music: ${includeMusic}, Subtitles: ${includeSubtitles}`);
+
+    // Simulate processing
+    const aspectMap = {
+      '16:9': 'landscape',
+      '9:16': 'portrait',
+      '1:1': 'square',
+      '4:5': 'instagram'
+    };
+
+    // In demo mode, return placeholder
+    // In production, call actual AI video generation API
+    const videoUrl = `https://www.w3schools.com/html/mov_bbb.mp4`; // Demo video
+
+    res.json({
+      ok: true,
+      videoUrl,
+      model,
+      videoType,
+      duration: parseInt(duration),
+      style,
+      voice,
+      aspect: aspectMap[aspect],
+      includeMusic,
+      includeSubtitles,
+      timestamp: new Date().toISOString(),
+      processingTime: Math.floor(Math.random() * 120) + 60 + 's',
+      status: 'completed',
+      message: 'Demo mode: Using sample video. For production, connect to Runway, Synthesia, or HeyGen API'
+    });
+  } catch (error) {
+    console.error('Video generation error:', error);
+    res.status(500).json({
+      ok: false,
+      error: 'Failed to generate video',
+      details: error.message
+    });
+  }
+});
+
 app.use(express.static(PUBLIC_DIR));
 
 app.get('*', (req, res, next) => {

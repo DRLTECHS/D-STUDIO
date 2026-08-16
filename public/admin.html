@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - DRL Techs</title>
+  <link rel="stylesheet" href="/assets/css/admin.css">
+</head>
+<body class="admin-body">
+  <!-- Login Screen -->
+  <div id="loginScreen" class="login-screen active">
+    <div class="login-container">
+      <div class="login-header">
+        <span class="brand-mark-admin">✦</span>
+        <h1>DRL TECHS Admin</h1>
+        <p>Secure Dashboard Access</p>
+      </div>
+      
+      <form id="loginForm" class="login-form">
+        <div class="form-group">
+          <label for="adminPassword">Admin Password</label>
+          <input 
+            type="password" 
+            id="adminPassword" 
+            placeholder="Enter admin password" 
+            required 
+            autocomplete="current-password"
+          >
+          <small class="form-hint">Default: admin123 (change in settings)</small>
+        </div>
+        
+        <button type="submit" class="btn-primary btn-large">Sign In</button>
+        <div class="login-error" id="loginError"></div>
+      </form>
+      
+      <div class="login-footer">
+        <p>🔒 Encrypted session • Admin access only</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin Dashboard -->
+  <div id="adminDashboard" class="admin-dashboard">
+    <!-- Header -->
+    <header class="admin-header">
+      <div class="header-left">
+        <h1 class="admin-title">Dashboard</h1>
+        <p class="admin-subtitle" id="currentTime">Loading...</p>
+      </div>
+      
+      <nav class="admin-nav">
+        <button class="nav-link active" data-tab="dashboard">
+          <span class="icon">📊</span> Dashboard
+        </button>
+        <button class="nav-link" data-tab="orders">
+          <span class="icon">📦</span> Orders
+        </button>
+        <button class="nav-link" data-tab="webhooks">
+          <span class="icon">🔔</span> Webhooks
+        </button>
+        <button class="nav-link" data-tab="ai">
+          <span class="icon">🤖</span> AI Content
+        </button>
+        <button class="nav-link" data-tab="media">
+          <span class="icon">🎨</span> Media Gen
+        </button>
+        <button class="nav-link" data-tab="settings">
+          <span class="icon">⚙️</span> Settings
+        </button>
+        <button class="nav-link" id="logoutBtn">
+          <span class="icon">🚪</span> Logout
+        </button>
+      </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="admin-content">
+      
+      <!-- Dashboard Tab -->
+      <section id="dashboardTab" class="tab-content active">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon">📊</div>
+            <div class="stat-details">
+              <p class="stat-label">Total Orders</p>
+              <p class="stat-value" id="totalOrders">-</p>
+            </div>
+          </div>
+          
+          <div class="stat-card">
+            <div class="stat-icon">✓</div>
+            <div class="stat-details">
+              <p class="stat-label">Completed</p>
+              <p class="stat-value" id="completedOrders">-</p>
+            </div>
+          </div>
+          
+          <div class="stat-card">
+            <div class="stat-icon">⏳</div>
+            <div class="stat-details">
+              <p class="stat-label">Pending</p>
+              <p class="stat-value" id="pendingOrders">-</p>
+            </div>
+          </div>
+          
+          <div class="stat-card">
+            <div class="stat-icon">💰</div>
+            <div class="stat-details">
+              <p class="stat-label">Total Revenue</p>
+              <p class="stat-value" id="totalRevenue">-</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="dashboard-section">
+          <h2>Recent Activity</h2>
+          <div id="recentActivity" class="activity-list">
+            <p class="loading">Loading activity...</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Orders Tab -->
+      <section id="ordersTab" class="tab-content">
+        <div class="orders-header">
+          <h2>Order Management</h2>
+          <div class="orders-filter">
+            <input type="text" id="orderSearch" placeholder="Search by Order ID..." class="search-input">
+            <select id="orderStatusFilter" class="filter-select">
+              <option value="">All Status</option>
+              <option value="pending">Pending</option>
+              <option value="completed">Completed</option>
+              <option value="failed">Failed</option>
+            </select>
+          </div>
+        </div>
+        
+        <div id="ordersTable" class="orders-table-container">
+          <p class="loading">Loading orders...</p>
+        </div>
+      </section>
+
+      <!-- Webhooks Tab -->
+      <section id="webhooksTab" class="tab-content">
+        <div class="webhooks-header">
+          <h2>Webhook Logs</h2>
+          <button class="btn-secondary" id="clearWebhooksBtn">Clear Logs</button>
+        </div>
+        
+        <div class="webhooks-config">
+          <h3>Webhook Configuration</h3>
+          <div class="config-item">
+            <label>Webhook URL:</label>
+            <code id="webhookUrl" class="code-block">/api/swiftpay/webhook</code>
+            <button class="btn-sm" id="copyWebhookBtn">Copy</button>
+          </div>
+        </div>
+
+        <div id="webhooksList" class="webhooks-list">
+          <p class="loading">Loading webhook logs...</p>
+        </div>
+      </section>
+
+      <!-- AI Content Generator Tab -->
+      <section id="aiTab" class="tab-content">
+        <div class="ai-section">
+          <h2>AI Content Generator 🤖</h2>
+          
+          <div class="ai-generator-container">
+            <!-- Generator Form -->
+            <div class="ai-form-section">
+              <h3>Generate Marketing Content</h3>
+              
+              <form id="aiGeneratorForm" class="ai-form">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="aiPlatform">Platform</label>
+                    <select id="aiPlatform" required>
+                      <option value="">Select Platform...</option>
+                      <option value="facebook">Facebook</option>
+                      <option value="instagram">Instagram</option>
+                      <option value="twitter">Twitter/X</option>
+                      <option value="linkedin">LinkedIn</option>
+                      <option value="tiktok">TikTok</option>
+                      <option value="all">All Platforms</option>
+                    </select>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="aiContentType">Content Type</label>
+                    <select id="aiContentType" required>
+                      <option value="">Select Type...</option>
+                      <option value="product">Product Ad</option>
+                      <option value="promotion">Promotion</option>
+                      <option value="announcement">Announcement</option>
+                      <option value="testimonial">Testimonial</option>
+                      <option value="educational">Educational</option>
+                      <option value="engagement">Engagement Post</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="aiProductName">Product/Service Name</label>
+                  <input type="text" id="aiProductName" placeholder="e.g., Software Trading Platform, D-STUDIO" required>
+                </div>
+
+                <div class="form-group">
+                  <label for="aiKeywords">Keywords (comma-separated)</label>
+                  <input type="text" id="aiKeywords" placeholder="e.g., innovative, efficient, trusted, secure">
+                </div>
+
+                <div class="form-group">
+                  <label for="aiTone">Tone of Voice</label>
+                  <select id="aiTone">
+                    <option value="professional">Professional</option>
+                    <option value="casual">Casual & Friendly</option>
+                    <option value="humorous">Humorous</option>
+                    <option value="inspirational">Inspirational</option>
+                    <option value="urgent">Urgent</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="aiTargetAudience">Target Audience</label>
+                  <input type="text" id="aiTargetAudience" placeholder="e.g., Developers, Startups, Enterprises">
+                </div>
+
+                <div class="form-group">
+                  <label for="aiCTA">Call-to-Action (optional)</label>
+                  <input type="text" id="aiCTA" placeholder="e.g., Learn More, Sign Up Now, Get Started">
+                </div>
+
+                <button type="submit" class="btn-primary btn-large" id="generateBtn">
+                  ✨ Generate Content
+                </button>
+              </form>
+            </div>
+
+            <!-- Generated Content Display -->
+            <div class="ai-output-section" id="aiOutputSection" style="display: none;">
+              <h3>Generated Content</h3>
+              
+              <div class="ai-preview">
+                <textarea id="aiGeneratedContent" class="ai-content-editor" placeholder="Generated content will appear here..." readonly></textarea>
+                <div class="ai-controls">
+                  <button class="btn-sm" id="copyContentBtn">📋 Copy</button>
+                  <button class="btn-sm" id="regenerateBtn">🔄 Regenerate</button>
+                  <button class="btn-sm" id="editContentBtn">✏️ Edit</button>
+                </div>
+              </div>
+
+              <div class="publish-options">
+                <h4>Publish Settings</h4>
+                
+                <div class="form-group">
+                  <label for="publishPlatform">Target Platform</label>
+                  <select id="publishPlatform" required>
+                    <option value="">Select Platform...</option>
+                    <option value="facebook">Facebook</option>
+                    <option value="instagram">Instagram</option>
+                    <option value="twitter">Twitter/X</option>
+                    <option value="linkedin">LinkedIn</option>
+                    <option value="tiktok">TikTok</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="publishTime">Schedule Publish (optional)</label>
+                  <input type="datetime-local" id="publishTime">
+                  <small>Leave empty to publish immediately</small>
+                </div>
+
+                <div class="form-group">
+                  <label>
+                    <input type="checkbox" id="addHashtags" checked>
+                    Add Relevant Hashtags
+                  </label>
+                </div>
+
+                <button class="btn-primary" id="publishBtn">🚀 Publish to Social Media</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Campaign History -->
+          <div class="campaigns-section">
+            <h3>Campaign History</h3>
+            <div class="campaigns-filter">
+              <select id="campaignFilter" class="filter-select">
+                <option value="">All Campaigns</option>
+                <option value="published">Published</option>
+                <option value="scheduled">Scheduled</option>
+                <option value="draft">Draft</option>
+              </select>
+            </div>
+            
+            <div id="campaignsList" class="campaigns-list">
+              <p class="loading">No campaigns yet. Generate your first content!</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Media Generation Tab -->
+      <section id="mediaTab" class="tab-content">
+        <div class="media-generator-container">
+          <!-- Image Generation Section -->
+          <div class="media-section">
+            <h2>🎨 Image Generator</h2>
+            <p class="media-description">Generate professional product images, social media graphics, and promotional visuals.</p>
+            
+            <form id="imageGeneratorForm" class="media-form">
+              <div class="form-columns">
+                <div class="form-group">
+                  <label for="imageModel">AI Model</label>
+                  <select id="imageModel" required>
+                    <option value="">Select Model...</option>
+                    <option value="dall-e-3">DALL-E 3 (Recommended)</option>
+                    <option value="dall-e-2">DALL-E 2</option>
+                    <option value="midjourney">Midjourney (via API)</option>
+                    <option value="stable-diffusion">Stable Diffusion</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="imageType">Image Type</label>
+                  <select id="imageType" required>
+                    <option value="">Select Type...</option>
+                    <option value="product">Product Shot</option>
+                    <option value="banner">Social Media Banner</option>
+                    <option value="thumbnail">YouTube Thumbnail</option>
+                    <option value="hero">Hero/Landing Page</option>
+                    <option value="infographic">Infographic</option>
+                    <option value="mockup">Product Mockup</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="imageStyle">Visual Style</label>
+                  <select id="imageStyle" required>
+                    <option value="">Select Style...</option>
+                    <option value="photorealistic">Photorealistic</option>
+                    <option value="minimalist">Minimalist Design</option>
+                    <option value="3d-render">3D Render</option>
+                    <option value="illustration">Illustration</option>
+                    <option value="modern">Modern & Clean</option>
+                    <option value="vibrant">Vibrant & Colorful</option>
+                    <option value="professional">Professional Corporate</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="imagePrompt">Image Description</label>
+                <textarea id="imagePrompt" placeholder="Describe the image you want. Example: 'Professional software engineer working at modern desk, D-STUDIO interface on monitor, minimalist office setup, 4K photography'" rows="4" required></textarea>
+              </div>
+
+              <div class="form-columns">
+                <div class="form-group">
+                  <label for="imageSize">Resolution</label>
+                  <select id="imageSize" required>
+                    <option value="square">Square (1024x1024)</option>
+                    <option value="portrait">Portrait (1024x1792)</option>
+                    <option value="landscape">Landscape (1792x1024)</option>
+                    <option value="social">Social (1200x630)</option>
+                    <option value="4k">4K (3840x2160)</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="imageQuality">Quality Level</label>
+                  <select id="imageQuality" required>
+                    <option value="standard">Standard (Faster)</option>
+                    <option value="hd">HD</option>
+                    <option value="ultra">Ultra (Slower)</option>
+                  </select>
+                </div>
+              </div>
+
+              <button type="submit" class="btn-primary btn-large" id="generateImageBtn">
+                🎨 Generate Image
+              </button>
+            </form>
+
+            <!-- Image Preview -->
+            <div class="image-preview-section" id="imagePreviewSection" style="display: none;">
+              <h3>Generated Image</h3>
+              <img id="generatedImage" src="" alt="Generated Image" class="image-preview">
+              <div class="image-info">
+                <p id="imageMetadata"></p>
+              </div>
+              <div class="media-controls">
+                <button class="btn-sm" id="downloadImageBtn">📥 Download</button>
+                <button class="btn-sm" id="regenerateImageBtn">🔄 Regenerate</button>
+                <button class="btn-sm" id="useImageBtn">✓ Use in Post</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Divider -->
+          <div class="media-divider"></div>
+
+          <!-- Video Generation Section -->
+          <div class="media-section">
+            <h2>🎬 Video Generator</h2>
+            <p class="media-description">Create engaging product videos, promotional clips, and social media content.</p>
+            
+            <form id="videoGeneratorForm" class="media-form">
+              <div class="form-columns">
+                <div class="form-group">
+                  <label for="videoModel">AI Video Model</label>
+                  <select id="videoModel" required>
+                    <option value="">Select Model...</option>
+                    <option value="runway">Runway ML (Recommended)</option>
+                    <option value="synthesia">Synthesia</option>
+                    <option value="descript">Descript AI Video</option>
+                    <option value="elevenlabs-video">ElevenLabs Video</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="videoType">Video Type</label>
+                  <select id="videoType" required>
+                    <option value="">Select Type...</option>
+                    <option value="product-demo">Product Demo</option>
+                    <option value="testimonial">Testimonial</option>
+                    <option value="commercial">Commercial/Ad</option>
+                    <option value="explainer">Explainer Video</option>
+                    <option value="social-short">Social Media Short (15-60s)</option>
+                    <option value="promotional">Promotional Video</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="videoLength">Video Duration</label>
+                  <select id="videoLength" required>
+                    <option value="">Select Duration...</option>
+                    <option value="15">15 seconds (TikTok/Reels)</option>
+                    <option value="30">30 seconds (Ads)</option>
+                    <option value="60">1 minute (YouTube Short)</option>
+                    <option value="120">2 minutes (Product Demo)</option>
+                    <option value="180">3 minutes (Full Video)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="videoScript">Video Script/Description</label>
+                <textarea id="videoScript" placeholder="Write the script or describe the video. Example: 'Show D-STUDIO interface in action, highlight key features, demonstrate workflow, end with call-to-action. Music: upbeat tech background. Narration: professional male voice'" rows="5" required></textarea>
+              </div>
+
+              <div class="form-columns">
+                <div class="form-group">
+                  <label for="videoStyle">Visual Style</label>
+                  <select id="videoStyle" required>
+                    <option value="">Select Style...</option>
+                    <option value="cinematic">Cinematic</option>
+                    <option value="modern">Modern & Clean</option>
+                    <option value="animated">Animated</option>
+                    <option value="screen-record">Screen Recording</option>
+                    <option value="mixed">Mixed (Real + Animation)</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="videoVoice">Narration/Voice</label>
+                  <select id="videoVoice" required>
+                    <option value="none">None (Music Only)</option>
+                    <option value="male">Male Professional</option>
+                    <option value="female">Female Professional</option>
+                    <option value="narrator">Narrator (Deep Voice)</option>
+                    <option value="upbeat">Upbeat & Energetic</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="videoAspect">Aspect Ratio</label>
+                  <select id="videoAspect" required>
+                    <option value="16:9">16:9 (YouTube)</option>
+                    <option value="9:16">9:16 (TikTok/Reels)</option>
+                    <option value="1:1">1:1 (Square)</option>
+                    <option value="4:5">4:5 (Instagram)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>
+                  <input type="checkbox" id="videoIncludeMusic" checked>
+                  Include Background Music
+                </label>
+                <label>
+                  <input type="checkbox" id="videoIncludeSubtitles" checked>
+                  Include Subtitles
+                </label>
+              </div>
+
+              <button type="submit" class="btn-primary btn-large" id="generateVideoBtn">
+                🎬 Generate Video
+              </button>
+            </form>
+
+            <!-- Video Preview -->
+            <div class="video-preview-section" id="videoPreviewSection" style="display: none;">
+              <h3>Generated Video</h3>
+              <div class="video-container">
+                <video id="generatedVideo" controls class="video-preview">
+                  <source src="" type="video/mp4">
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+              <div class="video-info">
+                <p id="videoMetadata"></p>
+              </div>
+              <div class="media-controls">
+                <button class="btn-sm" id="downloadVideoBtn">📥 Download</button>
+                <button class="btn-sm" id="regenerateVideoBtn">🔄 Regenerate</button>
+                <button class="btn-sm" id="useVideoBtn">✓ Use in Campaign</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Media Library -->
+          <div class="media-divider"></div>
+          <div class="media-section">
+            <h2>📁 Generated Media Library</h2>
+            <div class="library-tabs">
+              <button class="library-tab-btn active" data-filter="all">All Media</button>
+              <button class="library-tab-btn" data-filter="images">Images</button>
+              <button class="library-tab-btn" data-filter="videos">Videos</button>
+            </div>
+            
+            <div id="mediaLibrary" class="media-library-grid">
+              <p class="loading">No media generated yet. Create your first image or video!</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Settings Tab -->
+      <section id="settingsTab" class="tab-content">
+        <div class="settings-section">
+          <h2>Admin Settings</h2>
+          
+          <div class="settings-group">
+            <h3>Password</h3>
+            <form id="passwordForm" class="settings-form">
+              <div class="form-group">
+                <label for="currentPassword">Current Password</label>
+                <input type="password" id="currentPassword" placeholder="Enter current password" required>
+              </div>
+              <div class="form-group">
+                <label for="newPassword">New Password</label>
+                <input type="password" id="newPassword" placeholder="Enter new password" required>
+              </div>
+              <div class="form-group">
+                <label for="confirmPassword">Confirm Password</label>
+                <input type="password" id="confirmPassword" placeholder="Confirm new password" required>
+              </div>
+              <button type="submit" class="btn-primary">Update Password</button>
+              <div class="form-message" id="passwordMessage"></div>
+            </form>
+          </div>
+
+          <div class="settings-group">
+            <h3>SwiftPay Configuration</h3>
+            <div class="config-display">
+              <div class="config-item">
+                <label>API Key:</label>
+                <code id="apiKeyDisplay" class="code-block masked">••••••••••••••••</code>
+                <button class="btn-sm" id="toggleApiKeyBtn">Reveal</button>
+              </div>
+              <div class="config-item">
+                <label>API Secret:</label>
+                <code id="apiSecretDisplay" class="code-block masked">••••••••••••••••</code>
+                <button class="btn-sm" id="toggleApiSecretBtn">Reveal</button>
+              </div>
+              <div class="config-item">
+                <label>Mode:</label>
+                <p id="modeDisplay">-</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-group">
+            <h3>System Info</h3>
+            <div class="config-display">
+              <div class="config-item">
+                <label>Environment:</label>
+                <p id="envDisplay">-</p>
+              </div>
+              <div class="config-item">
+                <label>Base URL:</label>
+                <p id="baseUrlDisplay">-</p>
+              </div>
+              <div class="config-item">
+                <label>Server Status:</label>
+                <p id="serverStatus"><span class="status-badge status-ok">✓ Online</span></p>
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-group danger-zone">
+            <h3>Danger Zone</h3>
+            <p class="danger-text">⚠️ These actions are irreversible. Proceed with caution.</p>
+            <button class="btn-danger" id="clearSessionsBtn">Clear All Sessions</button>
+            <button class="btn-danger" id="resetDataBtn">Reset Demo Data</button>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Toast Notifications -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <script src="/assets/js/admin.js"></script>
+</body>
+</html>

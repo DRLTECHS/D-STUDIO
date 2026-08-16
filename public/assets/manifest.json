@@ -1,0 +1,16 @@
+{
+  "/assets/js/animations.js": "/assets/dist/animations.f99198e6963f.js",
+  "/assets/css/animations.css": "/assets/dist/animations.02f8c9012c32.css",
+  "/assets/images/hero-before.png": {
+    "webp": "/assets/images/hero-before-800w.webp",
+    "webp_srcset": "/assets/images/hero-before-800w.webp 800w, /assets/images/hero-before-1600w.webp 1600w",
+    "png": "/assets/images/hero-before-800w.png",
+    "png_srcset": "/assets/images/hero-before-800w.png 800w, /assets/images/hero-before-1600w.png 1600w"
+  },
+  "/assets/images/hero-after.png": {
+    "webp": "/assets/images/hero-after-800w.webp",
+    "webp_srcset": "/assets/images/hero-after-800w.webp 800w, /assets/images/hero-after-1600w.webp 1600w",
+    "png": "/assets/images/hero-after-800w.png",
+    "png_srcset": "/assets/images/hero-after-800w.png 800w, /assets/images/hero-after-1600w.png 1600w"
+  }
+}

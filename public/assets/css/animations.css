@@ -23,7 +23,34 @@
 .stat strong { transform:translateY(6px); opacity:0; transition:transform .7s cubic-bezier(.2,.9,.2,1), opacity .7s; }
 .stat.in-view strong { transform:none; opacity:1; }
 
+/* Scroll-based parallax */
+@keyframes parallax-shift { from { transform:translateY(0); } to { transform:translateY(var(--parallax-offset, 0)); } }
+
+/* Parallax layers */
+.parallax { will-change:transform; transform:translate3d(0,0,0); backface-visibility:hidden; perspective:1000px; }
+.parallax-depth-1 { --parallax-speed:0.25; }
+.parallax-depth-2 { --parallax-speed:0.5; }
+.parallax-depth-3 { --parallax-speed:0.75; }
+
+/* Background elements with parallax */
+.parallax-bg { position:relative; will-change:transform; transform:translate3d(0,0,0); }
+.parallax-bg::before,
+.parallax-bg::after { will-change:transform; transform:translate3d(0,0,0); }
+
+/* Section parallax */
+.section-parallax { position:relative; overflow:hidden; }
+.section-parallax > * { will-change:transform; }
+
+/* Card parallax on scroll */
+.card-parallax { transform:translate3d(0,0,0); transition:transform .1s ease-out; }
+
+/* Text parallax (slower movement) */
+.text-parallax { will-change:transform; transform:translate3d(0,0,0); }
+
+/* Gradient shift parallax */
+.gradient-parallax { position:relative; background-attachment:fixed; }
+
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
-  .reveal img, .project, .stat strong { animation:none !important; transition:none !important; }
+  .reveal img, .project, .stat strong, .parallax, .card-parallax, .text-parallax { animation:none !important; transition:none !important; transform:none !important; }
 }

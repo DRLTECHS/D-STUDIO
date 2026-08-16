@@ -144,5 +144,47 @@
     if (heroBefore) {
       const link = document.createElement('link'); link.rel='preload'; link.as='image'; link.href = heroBefore.src; document.head.appendChild(link);
     }
+
+    // scroll-based parallax for depth effects
+    if (!reduce) {
+      const parallaxElements = document.querySelectorAll('[class*="parallax"]');
+      let scrollY = 0;
+
+      const updateScrollParallax = throttle(() => {
+        parallaxElements.forEach(el => {
+          const rect = el.getBoundingClientRect();
+          const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
+          
+          if (!isVisible) return;
+
+          // Calculate parallax offset based on element position and scroll
+          const centerOffset = rect.top + rect.height / 2 - window.innerHeight / 2;
+          
+          // Determine speed based on depth class
+          let speed = 0.5;
+          if (el.classList.contains('parallax-depth-1')) speed = 0.25;
+          else if (el.classList.contains('parallax-depth-2')) speed = 0.5;
+          else if (el.classList.contains('parallax-depth-3')) speed = 0.75;
+          else if (el.classList.contains('text-parallax')) speed = 0.3;
+          
+          const offset = centerOffset * speed;
+          
+          // Apply transform with GPU acceleration
+          if (el.classList.contains('card-parallax')) {
+            el.style.transform = `translate3d(0, ${offset * 0.5}px, 0)`;
+          } else if (el.classList.contains('text-parallax')) {
+            el.style.transform = `translate3d(0, ${offset}px, 0)`;
+          } else {
+            el.style.transform = `translate3d(0, ${offset * speed}px, 0)`;
+          }
+        });
+      }, 12);
+
+      // Scroll event listener with passive flag for better performance
+      window.addEventListener('scroll', () => { scrollY = window.scrollY; updateScrollParallax(); }, { passive: true });
+      
+      // Initial call
+      updateScrollParallax();
+    }
   });
 })();
